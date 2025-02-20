@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1739886065.17576 "c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures.tex" "lectures.pdf" "lectures" 1739886066.91503 2
+["pdflatex"] 1740044254.44895 "c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures.tex" "lectures.pdf" "lectures" 1740044257.21249 2
   "C:/Users/85290/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1695702518 24142036 d2e04efef1ccd0fdf4667d85b7385697 ""
   "C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/tfm/jknappen/ec/ectt1000.tfm" 993062340 1348 d70ddf2d5d512b838e50a335e385e919 ""
   "C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/tfm/public/latex-fonts/lasy6.tfm" 1136765053 520 4889cce2180234b97cad636b6039c722 ""
@@ -249,7 +249,7 @@
   "C:/Users/85290/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1656236890 56148 51a9a8571c07b9921892ae11063ae853 ""
   "C:/Users/85290/AppData/Local/Programs/MiKTeX/tex/latex/xstring/xstring.sty" 1693735632 123 a302f2c651a95033260db60e51527ae8 ""
   "c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures.tex" 1739886061 26801 308d11ca98206db7a5f281b479db3fbb ""
-  "lectures.aux" 1739886065 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "lectures.aux" 1740044254 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
   "lectures.tex" 1739886061 26801 308d11ca98206db7a5f281b479db3fbb ""
   "preamble-eng.tex" 1739221207 5788 a0d3aefa9aee43e5ba3aada34a90f25a ""
   (generated)
