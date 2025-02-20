@@ -1,0 +1,202 @@
+\usepackage{
+    amsmath, % mathematical eq and symbols
+    graphicx, % manipulate graphics (images)
+    xcolor, % color options
+    colortbl, % colours to tables
+    soul, % highlighting
+    multirow, % merging cells in tables
+    bm, % bolding variables
+    arydshln, % dashed lines
+    subcaption, % 2 figures on the same row
+    textcomp, gensymb, % degree symbol
+    amsfonts, % real number bold
+    booktabs, % formal tables
+    scrextend, % block Indents
+    blkarray, % transitionary probability matrices
+    tikz, pgfplots, % coordinate/ fig plots
+    ifthen, % logic statements
+    CJKutf8, % Chinese characters
+    hyperref,
+    wrapfig, % For positioning figures
+    CJKutf8, % Chinese characters
+    ntheorem,
+    enumitem, % for bullet spacing
+    amsmath,
+    ulem,
+    centernot,
+    pgfcore,
+    tabularx,
+    stackengine, % for table row height
+    bbm % for indicator functions/ bolding digits
+}
+
+\usepackage[most]{tcolorbox}
+\usepackage{tikz-cd}
+\usepackage[margin=0.5in]{geometry}
+\usepackage[parfill]{parskip}
+
+% Colors
+\definecolor{customtableheaderblue}{HTML}{AAAAEE}
+\definecolor{customblue}{RGB}{224, 255, 255}
+\definecolor{custompink}{RGB}{255, 204, 229}
+\definecolor{customgreen}{RGB}{224, 255, 239}
+\definecolor{displaygreen}{RGB}{34, 177, 76}
+\definecolor{customorange}{RGB}{255, 239, 224}
+\definecolor{custompurple}{RGB}{239, 224, 255}
+\definecolor{customgrey}{HTML}{DDDDDD}
+\definecolor{customlightgrey}{HTML}{EEEEEE}
+
+\everymath{\displaystyle}
+
+\makeatletter
+\newtheoremstyle{MyNonumberplain}%
+  {\item[\theorem@headerfont\hskip\labelsep ##1\theorem@separator]}%
+  {\item[\theorem@headerfont\hskip\labelsep ##3\theorem@separator]}%
+\makeatother
+\theoremstyle{MyNonumberplain}
+\theorembodyfont{\upshape}
+
+\theoremstyle{break}
+\newtheorem*{proof}{Proof. }
+
+\newcommand{\tmmathbf}[1]{\ensuremath{\boldsymbol{#1}}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\cyclic}[1]{\langle #1 \rangle}
+\newcommand{\nline}{\begin{tabular}{ll}&\\\end{tabular}}
+\newcommand{\nin}{\not\in}
+\newcommand{\p}{\phi}
+\newcommand{\infixor}{\text{ or }}
+\newcommand{\infixand}{\text{ and }}
+\newcommand{\ord}[1]{\text{ord}(#1)}
+\newcommand{\tmop}{\text}
+\newcommand{\xequal}[1]{\stackrel{#1}{=}}
+\newcommand{\tmscript}[1]{\text{\scriptsize{$#1$}}}
+
+\newtcolorbox{hintbox}{colback=violet!10,colframe=violet!70,boxrule=0pt,arc=0pt,boxsep=2pt,left=2pt,right=2pt,leftrule=2.5pt}
+
+\newtcolorbox{prfbox}{colback=gray!10,colframe=black!70,boxrule=0pt,arc=0pt,boxsep=2pt,left=2pt,right=2pt,leftrule=0pt}
+\newtcolorbox{thmbox}{colback=orange!25,colframe=orange!85,boxrule=0pt,arc=0pt,boxsep=2pt,left=2pt,right=2pt,leftrule=2.5pt}
+\newtcolorbox{defbox}{colback=blue!5,colframe=blue!70,boxrule=0pt,arc=0pt,boxsep=2pt,left=2pt,right=2pt,leftrule=2.5pt}
+\newtcolorbox{ansbox}{colback=gray!10,colframe=black!70,boxrule=0pt,arc=0pt,boxsep=2pt,left=2pt,right=2pt,leftrule=0pt}
+\newtcolorbox{expbox}{colback=green!10,colframe=green!70,boxrule=0pt,arc=0pt,boxsep=2pt,left=2pt,right=2pt,leftrule=2.5pt}
+\newtcolorbox{warnbox}{colback=red!15,colframe=red!70,boxrule=0pt,arc=0pt,boxsep=2pt,left=2pt,right=2pt,leftrule=2.5pt}
+
+\newtheorem{warning}{Warning}[section]
+
+\theoremstyle{break}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{example}{
+    Example
+    }[section]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newtheorem{definition}{
+Definition}[section]
+
+\newcommand\highlight[2][]{\tikz[overlay]\node[fill=cyan,inner sep=2pt, anchor=text, rectangle, rounded corners=1mm,#1] {#2};\phantom{#2}}
+
+\renewcommand\label[1]{}
+\pgfplotsset{compat = 1.18}
+\usetikzlibrary{matrix}
+
+% Colors
+\definecolor{customtableheaderblue}{HTML}{AAAAEE}
+\definecolor{customblue}{RGB}{224, 255, 255}
+\definecolor{custompink}{RGB}{255, 204, 229}
+\definecolor{customgreen}{RGB}{224, 255, 239}
+\definecolor{custompurple}{RGB}{239, 224, 255}
+
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+
+\tcbuselibrary{theorems}
+
+\newtcolorbox[auto counter]{explanation}[1][]{
+title={\bfseries Explanation},
+enhanced,
+drop shadow={black!50!white},
+boxed title style = {
+top = 0.1in,
+bottom = 0.1in,
+size = small,
+colback = custompink,
+},
+coltitle=black,
+attach boxed title to top left = {
+xshift=-\tcboxedtitlewidth/8,
+yshift=-\tcboxedtitleheight/2
+},
+top = 0.15in,
+colback = customgreen,
+#1}
+
+\newtcolorbox[auto counter]{formula}[1][]{
+title={\bfseries Formula},
+enhanced,
+drop shadow={black!50!white},
+boxed title style = {
+top = 0.1in,
+bottom = 0.1in,
+size = small,
+colback = custompink,
+},
+coltitle=black,
+attach boxed title to top left = {
+xshift=-\tcboxedtitlewidth/6,
+yshift=-\tcboxedtitleheight/2
+},
+top = 0.15in,
+colback = customblue,
+#1}
+
+\newcounter{question}
+\newtcolorbox[auto counter, number within=subsection]{question}[1][]{
+title={\bfseries Question},
+enhanced,
+drop shadow={black!50!white},
+boxed title style = {
+top = 0.1in,
+bottom = 0.1in,
+size = small,
+colback = custompink,
+},
+coltitle=black,
+attach boxed title to top left = {
+xshift=-\tcboxedtitlewidth/10,
+yshift=-\tcboxedtitleheight/2
+},
+top = 0.15in,
+colback = custompurple,
+#1}
+
+\setlength{\parindent}{0pt}
+\setlist[itemize]{itemsep=0.4em}
+\renewcommand{\baselinestretch}{1.15}
+
+\newtcolorbox[auto counter]{code}[1][]{
+title={\bfseries Code},
+enhanced,
+drop shadow={black!50!white},
+boxed title style = {
+top = 0.1in,
+bottom = 0.1in,
+size = small,
+colback = custompink,
+},
+coltitle=black,
+attach boxed title to top left = {
+xshift=-\tcboxedtitlewidth/5,
+yshift=-\tcboxedtitleheight/2
+},
+top = 0.15in,
+colback = customorange,
+#1}
+
+% Controlling row height
+\newcommand\xrowht[2][0]{\addstackgap[.5\dimexpr#2\relax]{\vphantom{#1}}}
+\everymath{\displaystyle}

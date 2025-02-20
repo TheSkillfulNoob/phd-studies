@@ -1,0 +1,567 @@
+\documentclass{article}
+\usepackage{minted}
+\input{preamble-eng}
+\title{Stanford CS234: Lectures 1 to 3}
+\begin{document}
+
+\section{Introduction}
+
+\subsection{Overview}
+\subsubsection{On General Machine Learning}
+ML has seen a huge (exponential) increase in academic interest since 2000. It is categorized as follows:
+\begin{enumerate}
+    \item Supervised and unsupervised Learning (SL/ UL): Only involves generalization
+    $\implies$ Differs in whether there is labelling
+    \item Imitation Learning (IL): behaviour cloning, assuming input demonstrations of GOOD policies
+    \item \textbf{Reinforcement Learning (RL): model-based learning (i.e. given reward info, states reached and actions taken)}
+\end{enumerate}
+
+\subsubsection{On Reinforcement Learning}
+RL refers to \textbf{\textcolor{blue}{Sequential decision making}} to make good decisions under uncertainty.
+\begin{defbox}
+  \subsubsection*{Steps of RL}
+  RL involves the following four steps:
+  \begin{enumerate}
+  \item \textbf{Optimization}:
+      Find optimal decisions yielding best/ very good outcomes (e.g. minimum distance inter-city route).
+  \item \textbf{Delayed consequences}:
+      Plan and reason long term ramifications (e.g. saving for retirement), through temporal credit assignment (i.e. identifying which past actions led to current rewards?).
+  \item \textbf{Exploration}:
+      Learn/ explore by making decisions (that impacts/ reinforces what we learn about from rewards, e.g. riding and falling from a bike).
+  \item \textbf{Generalization}:
+      Policy maps (= compresses) past experience to action.
+  \end{enumerate}
+\end{defbox}
+
+\begin{hintbox}
+    \subsubsection*{Why not always choose the best-known action in decision making?}
+    New actions might lead to even better rewards (exploration-exploitation trade-off).
+    \begin{prfbox}
+        Example: Trying a new restaurant vs. Going to favorite one?
+    \end{prfbox}
+\end{hintbox}
+
+\subsubsection{Course Flow}
+\begin{itemize}
+\item High-level learning goals:
+    Understand theoretical and empirical approaches for evaluating reinforcement learning algorithm quality
+\item Flow: 
+    First explore MDP $\implies$ model-free (policy evaluation and control) $\implies$ function approximation $\implies$ policy search + exploration
+\end{itemize}
+
+\subsection{Basic Layout of RL}
+RL algorithms involve \textbf{State, actions, reward model and dynamics model}:
+\begin{itemize}
+\item RL aims to select sequence of actions to maximize E[future reward],
+\item hence involves balancing immediate and long term rewards.
+\end{itemize}
+Example: Choose sequence of web advertisement to maximize view time
+
+\begin{defbox}
+  \subsubsection*{Mathematical Formulation of RL algorithms}
+  For each time $t$, a reinforcement learning agent (A) that interacts with the world (W) would...
+  \begin{enumerate}
+  \item A takes \textcolor{blue}{action $a_t$},
+  \item W updates $a_t$, emits \textcolor{blue}{observation $o_t$} and \textcolor{blue}{reward $r_t$}
+  \item A receives \textcolor{blue}{history $h_t$} containing {$a_i$, $o_i$, $r_i$} for all time $i$, cumulative history is called state $s_t$.
+  \end{enumerate}
+\end{defbox}
+
+In such sequential dynamic programming problems of RL, we have the following considerations:
+\begin{enumerate}
+\item \textbf{States}: Is the state Markov? Is the world partially observable?
+\item \textbf{Dynamics}: Are dynamics deterministic or stochastic?
+\item \textbf{Horizon of effect}: is future states taken into account?
+\end{enumerate}
+
+\subsubsection{States: Markov Assumption}
+In many cases, we have the Markov assumption:
+\begin{thmbox}
+  \subsubsection*{Markov Assumption: Definition}
+  The future is independent of past given present (i.e. \textcolor{blue}{state} is a sufficient statistic of \textcolor{cyan}{history}):
+  \begin{equation*}
+    P(s_{t+1} | \textcolor{blue}{s_t}, a_t ) = P(s_{t+1} | \textcolor{cyan}{h_t}, a_t )
+  \end{equation*}
+\end{thmbox}
+
+\subsubsection{Dynamics: Model, Policy, Value Function}
+RL Algos must contain $\ge1$ of {Model, Policy, Value Function}:
+
+\subsubsection*{Model}
+A MDP (Markov Decision Process) contains
+\begin{enumerate}
+\item \textbf{Transitional dynamics model}, predicting next agent state
+    $P(s_{t+1} = s' | s_t = s, a_t = a)$
+\item \textbf{Reward model}, predicting immediate reward 
+    $r(s_t = s | a_t = a) = E[ r_t | s_t = s, a_t = a]$
+\end{enumerate}
+
+\begin{hintbox}
+    \subsubsection*{Why Markov?}
+    \begin{prfbox}
+        \begin{itemize}
+            \item Simple, as long as history is in part of state (in practice, assume $s_t$ = $o_t$)
+            \item $s_t$ affects computational complexity, data required and result performance.
+        \end{itemize}
+    \end{prfbox}
+    \subsubsection*{Why do we start with MDP?}
+    \begin{prfbox}
+        \textbf{Structured framework} to model decision-making in uncertain environments.
+        \\ $\implies$ Easier to apply RL algorithms, defining \textcolor{magenta}{states, actions, rewards, and transitions}.
+    \end{prfbox}
+\end{hintbox}
+
+\subsubsection*{Policy}
+Policy (denoted by $\pi$) determines how actions are chosen (i.e. $\pi: S → A$). It can be
+\begin{enumerate}
+\item \textbf{Determinstic}: $\pi(s) = a$, or
+\item \textbf{Stochastic}: $\pi(a | s) = P(a_t = a |  s_t = s)$
+\end{enumerate}
+
+\subsubsection*{Value Function}
+Value function (denoted by $V^{\pi}$) discounts sum of future rewards under policy $\pi$, to quantify goodness of states/ actions:
+\begin{equation*}
+  V^{\pi}(s_t = s) = \mathbb{E}_{\pi} \left[ r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \dots | s_t = s \right]
+\end{equation*}
+
+\begin{defbox}
+  \subsubsection*{Discounting Factor Considerations}
+  Discount factor $\gamma$ weighs immediate vs future rewards:
+  \begin{itemize}
+  \item $\gamma = 0$: only cares about immediate;
+  \item $\gamma = 1$: possible for finite episode length.
+  \item To prevent infinite returns, conveniently set $\gamma$ < 1.
+  \end{itemize}
+\end{defbox}
+
+\subsection{Agent and Feedback: MRP}
+RL agents can be either
+\begin{enumerate}
+\item \textbf{Model-based}: explicit model, may (not) have policy and value functions;
+\item \textbf{Model-free}: no model, but value and/or polict functions must be explicit.
+\end{enumerate}
+
+\begin{defbox}
+  \subsubsection*{Learning Mechanisms}
+  Given a model of world (dynamics and reward), of finite set of states and actions.
+  \\Two actions for the RL agent include:
+  \begin{enumerate}
+  \item \textbf{Evaluation}: Estimate/ predict expected rewards given policy.
+  \item \textbf{Control}: find the best policy via optimization.
+  \end{enumerate}
+\end{defbox}
+
+Now consider the learning algorithm under Markov Chain (Markov Process):
+\begin{itemize}
+\item Markov processes involve sequences of random states with Markov property
+    \\They are defined by (finite) set of states $S$ and transition model $P$, specifying $P(s_{t+1} = s' | s_t = s)$
+\item In a transition model, there is \textcolor{blue}{no reward}, hence no actions are defined.
+    \\For finite ($N$) states, express P as $N \times N$ matrix.
+\item To bridge the stochasticity in quantifying rewards/ value, 
+    Markov Reward Processes (MRP) and Markov Decision Processes (MDP) are used.
+\end{itemize}
+
+\subsubsection{Markov Reward Processes (MRP)}
+MRP \textcolor{blue}{includes the reward} into consideration.
+\begin{itemize}
+\item It requires states $\mathbf{S}$, transition model $\mathbf{P}_{n \times n}$, reward $R(s_t = s)$, and discount factor $\gamma \in [0, 1]$. 
+\item With H steps in each episode (can be infinite), the return
+    \begin{equation*}
+      G_t = r_t + \gamma r_{t+1} + … + \gamma^{H-1} r_{t+H-1}
+    \end{equation*} 
+\item Define the state value $V(s) = E[G_t | S_t = s] = \textcolor{cyan}{R(s)} + \textcolor{orange}{\gamma \sum_{s' \in S} \mathbb{P}(s' | s) V(s')}$.
+    \\\textcolor{cyan}{The first term} is the immediate reward; the \textcolor{orange}{second term} is the discounted sum of future rewards.
+\end{itemize}
+
+Obviously we are interested in computing the value of a MRP. There are two methods:
+\begin{thmbox}
+    \subsubsection*{Analytical and Iterative Solutions of MRP}
+    \textcolor{orange}{Method 1 (Matrix inverse)} involves writing in matrix-vector forms:
+    \begin{itemize}
+    \item If the number of states $n$ is finite, rewards $\mathbf{R}$ is a vector.
+    \item Express $V(s)$ in the MRP using a matrix equation
+        \begin{equation*}
+          \mathbf{V}_{n \times 1} = \mathbf{R}_{n \times 1} + \gamma \mathbf{P}_{n \times n} \mathbf{V}_{n \times 1}
+        \end{equation*}
+    \item Rearranging, the solution $\mathbf{V} = (\mathbf{I} - \gamma \mathbf{P})^{-1} \mathbf{R}$.
+        \\Direct solve takes around $O(n^3)$ time.
+    \end{itemize}
+
+    \vspace{2em}
+    \textcolor{orange}{Method 2 (Iterative Solution)} involves looping until convergence:
+    \begin{itemize}
+    \item Dynamic programming by initializing $V_0(s) = 0$ for all $s$
+    \item For each iteration $k$, and all states $s \in S$: \hspace{4em} $V_{k}(s) = \textcolor{cyan}{R(s)} + \textcolor{orange}{\gamma \sum_{s' \in S} \mathbb{P}(s' | s) V_{k-1}(s')}$
+    \item Each iteration takes $O(n^2)$ time (because $n = |S|$).
+    \end{itemize}
+  \end{thmbox}
+
+\begin{hintbox}
+    \subsubsection*{Why $\mathbf{I} - \gamma \mathbf{P}$ is Invertible?}
+    \begin{prfbox}
+        With $\gamma < 1$ (ensuring convergence), and the fact that $\mathbf{P}$ is stochastic (rows sum to 1):
+        \begin{itemize}
+        \item The eigenvalues of $P$ are at most 1.
+        \item When scaled by $\gamma < 1$, largest eigenvalue $\lambda_1 < \gamma = 1$. 
+        \\This ensures $\mathbf{I} - \gamma \mathbf{P}$ is full rank (diagonally dominant).
+        \end{itemize}
+    \end{prfbox}
+\end{hintbox}
+
+\section{How to make good decisions given MDP?}
+\subsection{Solving MDP by reducing to MRP}
+\begin{defbox}
+    \subsubsection*{MDP as MRP Expansion}
+    \begin{itemize}
+    \item MRP($S$, $P$, $R$, $\gamma$) + Actions $A$ = MDP($S$, $A$, $P$, $R$, $\gamma$)
+        \begin{prfbox}
+            Example: Consider a robot vacuum moving around a room:
+            \begin{itemize}
+            \item Only models probabilities of movement without considering actions: MRP
+            \item Includes actions like 'turn left' or 'move forward: MDP
+            \end{itemize}
+        \end{prfbox}
+    \item MDP($S$, $A$, $P$, $R$, $\gamma$) + Policy $\pi(a | s)$ = MRP($S$, $P^{\pi}$, $R^{\pi}$, $\gamma$)
+        \\ Use same technique of computing MRP to evaluate MDP policy!
+    \item Various settings of MDPs:
+        \begin{enumerate}
+        \item \textbf{Single-state}: Bandits
+        \item \textbf{Continuous states}: Optimal control
+        \item \textbf{If state is history}: Partially observable MDPs (POMDPs)
+        \end{enumerate}
+    \end{itemize}
+\end{defbox}
+
+We can solve MDP as an MRP as follows:
+\begin{prfbox}
+    \subsubsection*{Solving MDP Iteratively}
+    For $k = 1$ till convergence, for any $s \in S$, the state value function $V$ is iterated with:
+    \begin{center}
+        $V_k^{π}(s) = \textcolor{orange}{\sum_{a} \pi(a | s)} \textcolor{cyan}{[r (s | a) + \gamma \sum_{s' \in S} P(s' | s,a) V_{k-1}^\pi(s')]}$ 
+        \quad\quad where $s' \in S$
+    \end{center}
+    \textit{This is called a Bellman backup equation.}
+    \begin{itemize}
+    \item Current value at $k$th iteration is obtained by 
+            \textcolor{orange}{summing the policy probabilities} varying state $s$, 
+            \textcolor{cyan}{weighted by the value} (current reward + future rewards discounted by one step).
+    \item For deterministic $\pi(s)$, i.e. $P(\pi(s) | s) = 1$, the formula reduces to
+    \begin{center}
+        $V_k^{π}(s) = r (s | \pi(s)) + \gamma \sum_{s' \in S} P(s' | s, \pi(s)) V_{k-1}^\pi(s')$
+    \end{center}
+    \end{itemize}
+\end{prfbox}
+\begin{hintbox}
+    Where does Bellman Equation arise?
+    \begin{prfbox}
+        It arises naturally when breaking down long-term decision problems (by recursion) into smaller subproblems, as in policy evaluation.
+    \end{prfbox}
+\end{hintbox}
+
+\subsection{How to find the optimal policy under MDP?}
+\begin{itemize}
+\item Given $|A|$ distinct options for each of the $|S|$ states, there are a total of $|A|^{|S|}$ deterministic policies possible.
+\item Optimal policy may NOT be unique (but is deterministic and stationary (does not depend on time step) for MDP in infinite horizon!), but there exists a \textbf{unique optimal value function}.
+\item Such optimal policy can be found by "controlling", i.e. optimizing $\pi(s) = \mathop{\arg\min}\limits_{\pi} V_{\pi}(s)$
+\end{itemize}
+
+\begin{hintbox}
+    \subsubsection*{Why is such optimal policy deterministic?}
+    \begin{prfbox}
+        \begin{itemize}
+        \item Randomness in an MDP \textcolor{magenta}{comes from state transitions}, not from the policy itself.
+        \item Given enough iterations, an optimal policy learns \textcolor{magenta}{best action in every state} $implies$ randomness is unnecessary.
+        \end{itemize}
+    \end{prfbox}
+\end{hintbox}
+
+There are primarily \textbf{THREE methods} in finding the optimal policy under MDP:
+\subsubsection{Policy iteration (PI)}
+PI is more efficient than enumeration. Its process is as follows:
+\begin{thmbox}
+  \subsubsection*{PI Process}
+  \begin{enumerate}
+  \item [(1)] \textbf{Initialization}: Initialize $\pi_0(s)$ randomly for all states $s$.
+  \item [(2)] \textbf{Check L1 Norm in Loop}: Iterate when \textcolor{blue}{\texttt{i == 0}} OR \textcolor{blue}{\texttt{$|| \pi_i - \pi_{i-1} ||_{1} > 0$}},
+        \\i.e. \textit{if policy changes for any state}.
+        \\Each time, compute  $V_\pi(i)$ (policy evaluation), and $\pi_{i+1}$ (policy improvement) to iterate new \texttt{i}
+  \end{enumerate}
+\end{thmbox}
+
+But why does PI guarantee generating better policies?
+\begin{itemize}
+\item Define the \textbf{state action value} (Q-function):
+    \begin{equation*}
+        Q_{\pi} (s, a) = R(s, a) + \gamma \sum_{s' \in S} P(s' | s, a) V_{\pi} (s')
+    \end{equation*}
+    \\It differs from $V_{\pi}$ that \textcolor{blue}{action $a$ is taken in addition} to following the policy.
+\item Then for new policy $\pi_{i+1}$, 
+      \begin{center}
+          $\pi_{i+1} (s) = \mathop{\arg\min}\limits_{a} Q^{\pi_i}{\pi}(s, a) \forall s \in S$
+      \end{center}
+      \\is a deterministic quantity.
+\item To improve the state-action value by varying $a$,
+      \begin{center}
+          $\mathop{\max}\limits_{a} Q^{\pi_i} (s, a) \geq
+          Q^{\pi_i} (s, \pi_{i}(s)) = R(s, \pi(s)) + \gamma \sum_{s' \in S} P(s' | s, \pi_i(s)) V^{{\pi}_i} (s')
+          = V^{{\pi}_i} (s)
+          $
+      \end{center}
+\end{itemize}
+
+This is more rigorously defined as follows:
+\begin{thmbox}
+    \subsubsection*{Monotonic Improvement in Policy}
+    Definition: $V^{\pi_{1}} \geq V^{\pi_{2}}$ if $V^{\pi_{1}}(s) \geq V^{\pi_{2}}(s)$ for all states $s$.
+    (\textit{Strict inequality $V^{\pi_{i+1}} > V^{\pi_{i}}$  if $\pi_{i}$ is suboptimal.})
+    \begin{prfbox}
+        \textbf{Implication}: By taking \textcolor{blue}{$\pi_{i+1} (s)$ for one action} and following $\pi_{i+1}$ forever, expected sum of rewards is \textcolor{blue}{at least as good} as always following $\pi_{i}$.
+        Since we always pick a better action, policies never get worse!
+    \end{prfbox}
+\end{thmbox}
+
+\begin{hintbox}
+    \subsubsection*{Regarding change (and iteration) of policies in PI}
+    \begin{prfbox}
+        \begin{itemize}
+            \item If policy doesn't change, it cannot be changed anymore.
+            \item There is a maximum number of policy iterations (since a finite number of options for each finite state).
+        \end{itemize}
+    \end{prfbox}
+    \subsubsection*{Why state action value is defined?}
+    \begin{prfbox}
+        \begin{itemize}
+            \item It evaluates the expected return \textcolor{magenta}{taking action $a$ a first}, then act optimally afterward.
+            \item Instead of storing $V(s)$, store $Q(s, \textcolor{magenta}{a})$ to \textcolor{magenta}{directly optimize} actions.
+        \end{itemize}
+    \end{prfbox}
+\end{hintbox}
+
+\subsubsection{Value iteration (VI)}
+The idea is to maintain \textbf{optimal value} of starting in state $s$, if finite number of steps $k$ left in episode.
+\\Then, iterate to consider \textcolor{blue}{longer and longer episodes}:
+\begin{defbox}
+    \subsubsection*{Bellman Operator}
+    For a value function, the Bellman Operator $B$ returns a new value that \textcolor{blue}{improves if possible}:
+    \begin{center}
+        $BV(s) = \textcolor{blue}{\mathop{\max}\limits_{a}} \left[\textcolor{blue}{R(s, a)} + \gamma \sum_{s' \in S} \textcolor{blue}{P(s' | s, a)} V(s')\right]$
+    \end{center}
+    For a policy,
+    \begin{center}
+        $B^{\pi} V(s) = R^{\pi} (s) + \gamma \sum_{s' \in S} P^{\pi} (s' | s) V(s')$
+    \end{center}
+    \begin{expbox}
+        Example: Updating est. travel time in Google Maps as new traffic data arrives (i.e. iteratively refines value estimates).
+    \end{expbox}
+\end{defbox}
+
+\begin{hintbox}
+    \subsubsection*{How to "maintain optimal value"? Why does $a$ disappear?}
+    \begin{prfbox}
+        \begin{itemize}
+            \item Maintaining optimal value means ensuring that for every state, compute best expected return by \textcolor{magenta}{considering all possible actions}. 
+            \item As we only keep the \textcolor{magenta}{highest value across actions}, we remove $a$.
+            \item We only care about values during iteration: Extract optimal policy by checking which action led to that value
+        \end{itemize}
+    \end{prfbox}
+\end{hintbox}
+
+\begin{thmbox}
+    \subsubsection*{VI Process}
+    \begin{enumerate}
+    \item [(1)] \textbf{Initialization}: $k = 1$, $V_0(s) = 0$ for all states $s$.
+    \item [(2)] \textbf{Check Norm in Loop}: Loop until convergence (i.e. checking $L_{\infty} = ||V_{k+1} - V_{k}||_{\infty} \leq \epsilon$)
+          \\For each state $s$ in $S$, iterate $V_{k+1}(s) = \mathop{\max}\limits_{a} \left[ R(s, a) + \gamma \sum_{s' \in S} P(s' | s, a) V_{k}(s') \right]$
+          \\This iteration step is equivalently $V_{k+1} = BV_k$
+    \end{enumerate}
+    For the optimal policy for \textcolor{orange}{finite horizon $H$}, iterate (loop) from $i = 0:H$ (exclusive of $H$):
+    \begin{itemize}
+    \item $V_{k+1}(s) = \mathop{\max}\limits_{a} \left[ R(s, a) + \gamma \sum_{s' \in S} P(s' | s, a) V_{k} (s') \right]$
+    \item $\pi_{k+1}(s) = \mathop{\arg \max}\limits_{a} \left[ R(s, a) + \gamma \sum_{s' \in S} P(s' | s, a) V_{k} (s') \right]$
+    \end{itemize}
+\end{thmbox}
+
+But why does VI guarantee convergence?
+\begin{itemize}
+\item Quantify convergence with \textcolor{blue}{contraction operator $O$}, satisfying
+    \begin{center}
+        $||OV - OV'||_n \leq ||V - V'||_n$ for any $L_n$ norm.
+    \end{center}
+\item Converges when $\gamma < 1$ OR ending up in terminal state with probability 1!
+\item VI converges to \textbf{unique solution} for discrete state and action spaces
+\item Policy evaluation = compute \textbf{fixed point} of $B_{\pi}$, by repeatedly applying operator until V stops changing, i.e.
+    \begin{center}
+        $V^{\pi} = B^{\pi} B^{\pi} … B^{\pi} V$
+    \end{center}
+\end{itemize}
+
+\begin{hintbox}
+    What does “fixed point” here mean?
+    \begin{prfbox}
+        \begin{itemize}
+            \item Applying the operator doesn't change the result anymore.
+            \item Signifies convergence (e.g. in PI, determine whether the policy should be updated).
+        \end{itemize}
+    \end{prfbox}
+    Does the initialization of values in value iteration impact anything?
+    \begin{prfbox}
+        \begin{itemize}
+            \item It only affects convergence speed, but same final result. 
+            \item Because Bellman backup is a contraction mapping.
+        \end{itemize}
+    \end{prfbox}
+\end{hintbox}
+
+\subsubsection*{A brief summary of PI vs VI}
+\begin{center}
+    \begin{tabular}{|c||c|c|}
+    \hline
+     Type & PI & VI \\ \hline
+     To compute... & 
+        \textcolor{blue}{Infinite} horizon value &
+        Optimal \textcolor{blue}{finite $k$-horizon} value 
+    \\ \hline
+    Use & 
+        Select another (better) policy &
+        Find optimal policy, by incrementing time horizon 
+    \\ \hline
+        Convergence & 
+        \#Iterations $\leq$ Enumeration of all deterministic policies, &
+        Depends on discounting factor $\gamma$ , 
+    \\ & i.e. of size $|A|^{|S|}$ & possible to exceed $|A|^{|S|}$
+    \\ \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Monte Carlo (MC) Methods for MDP}
+Given dynamics and reward models, can do policy evaluation through DP.
+\begin{center}
+    $V_k^{\pi}(s) = r (s | \pi(s)) + \textcolor{orange}{\gamma \sum_{s' \in S} P(s' | s, \pi(s)) V_{k-1}^{\pi}(s')}$
+\end{center}
+
+Here, $V_k^{\pi}$ is an estimate of $V^{\pi}$, and \textcolor{orange}{the second part} can be replaced by \textbf{bootstrapping} if dynamics/ reward models are unknown but deterministic 
+: when there is \textcolor{blue}{no access to true MDP}.
+\begin{itemize}
+\item MC follows policy $\pi$ to \textcolor{blue}{generate sample trajectories} and take expectation on sample return to approximate (estimate) $V^{\pi}(s)$.
+\item Rationale: Mean return converges to value (by LLN)
+    \\\textit{Note: All trajectories may not be of the same length because of MDP.}
+\item Requires \textcolor{blue}{episodic settings (terminal state/ finite horizon)} to end episode
+    \\ $\implies$ Terminate episode before averaging.
+\end{itemize}
+
+\begin{hintbox}
+    \subsubsection*{Advantages of MC}
+    \begin{itemize}
+    \item Weak assumption (No need Markov assumption/ knowing MDP dynamics and rewards)
+    \item Sometimes preferred over DP for policy evaluation even with known dynamics model and reward. (Explain why?)
+    \end{itemize}
+\end{hintbox}
+
+The process and variations of MC is as follows:
+\begin{thmbox}
+    \subsubsection*{MC Process}
+    \begin{enumerate}
+    \item \textbf{Initialize}:
+        Number of samples $N(s) = 0$, grand total $G(s) = 0$ for each state $s \in S$.
+    \item \textbf{Loop}:
+        \begin{itemize}
+        \item For each episode $i$, sample trajectories $(s_{i,1}, a_{i,1}, r_{i,1}), (s_{i,2}, a_{i,2}, r_{i,2}), \dots , s_{i, t_i}$
+        \item Compute return value $G_{i, t}$ as return from time step $t$:
+            \begin{center}
+                $G_{i, t} = r_{i, t} + \gamma r_{i, t+1} + \dots + \gamma^{T_i-t} r_{i,T_i}$
+            \end{center}
+        \item Update state values for each time step t until end of episode i:
+            \\Increment \# visits: $N(s) = N(s) + 1$
+            \\Increment total return: $G(s) = G(s) + G_{i, t}$
+            \\Update estimate $V^{\pi}(s) = G(s)/ N(s)$
+        \end{itemize}
+    \end{enumerate}  
+\end{thmbox}
+
+There are \textbf{Three variations} for MC:
+\begin{defbox}
+    \subsubsection*{Variations of MC}
+    \begin{enumerate}
+        \item [(i)] \textcolor{blue}{First-time MC}: Increment $N(s)$ for the \textcolor{blue}{first time visiting state $s$} in episode $i$, i.e. $N(s) = 1$
+        \item [(ii)] \textcolor{blue}{Every-time MC}: Increment $N(s)$ \textcolor{blue}{each time visiting state $s$} in episode $i$
+        \item [(iii)] \textcolor{blue}{Incremental MC}: After obtaining the new return value $G_{i, t}$, rewrite the update from $V^{\pi}(s)$ to $V^{\pi}(s)'$:
+            \begin{prfbox}
+                \begin{aligned}
+                    V^{\pi}(s)' & = \frac{G(s)'}{N(s)'} = \frac{G(s) + G_{i, t}}{N(s) + 1} = \frac{\textcolor{cyan}{G(s)}}{N(s) + 1} + \frac{G_{i, t}}{N(s) + 1} \\
+                    & = \textcolor{cyan}{V^{\pi}(s)} \times \frac{\textcolor{cyan}{N(s)}}{N(s) + 1} + \frac{G_{i, t}}{N(s) + 1} \\
+                    & = \textcolor{cyan}{V^{\pi}(s)} + \textcolor{magenta}{\frac{1}{N(s) + 1}} \left( G_{i, t} - V^{\pi}(s) \right) \\
+                    V^{\pi}(s)' & = \textcolor{cyan}{V^{\pi}(s)} + \textcolor{magenta}{\alpha} \left( G_{i, t} - V^{\pi}(s) \right)
+                \end{aligned}
+            \end{prfbox}
+    \end{enumerate}
+\end{defbox}
+
+The general form replaces the learning rate \textcolor{magenta}{$\alpha = 1/[N(s) + 1]$} to other rates. Viewed from this perspective:
+\begin{center}
+    \begin{tabular}{|c||c|c|c|}
+    \hline
+     MC Type & Every Visit & First Visit & General incremental form \\ \hline
+     $\alpha$ & 
+        $\frac{1}{N (s_{i, t})}$ &
+        1 if $N(s) = 0$, 0 otherwise &
+        Variable
+    \\ \hline
+    Properties & 
+        Biased, but consistent and offers better MSE &
+        Unbiased estimator of $V^{\pi}(s)$ by LLN & 
+        Rate larger than $1/N(s_{i,t})$ is helpful in non-stationary domains
+    \\ \hline
+    \end{tabular}
+\end{center}
+
+\begin{hintbox}
+    Q: What is an intuitive explanation to such every-visit "bias"? What does it mean by helpful in non-stationary domains?
+\end{hintbox}
+
+\subsection{Evaluating Policy Estimation Quality}
+We take theoretical and computational aspects for consideration:
+\begin{itemize}
+\item Theoretical: Statistical efficiency, consistency and empirical accuracy (MSE) 
+\item Computation: Runtime and Memory Complexity
+\end{itemize}
+
+\begin{defbox}
+    \subsubsection{Bias and Variance}
+    The empirical accuracy of learning models is quantified by Mean Squared Error (MSE):
+    \begin{center}
+        $\text{MSE}(\hat{\theta}) = \text{Var}(\hat{\theta}) + \text{Bias} (\hat{\theta})^2$
+    \end{center}
+    \begin{itemize}
+    \item $\text{Var}(\hat{\theta}) = \mathbb{E}_{x | \theta} [(\hat{\theta} - \mathbb{E}[\hat{\theta}])^2]$
+    \item $\text{Bias}(\hat{\theta})^2 = (\mathbb{E}_{x | \theta}[\hat{\theta}] - \theta)^2$
+    \end{itemize}
+\end{defbox}
+
+\textbf{Consistency} quantifies how reliable an estimator is:
+\begin{itemize}
+\item If there are $n$ data points of $x$, $\lim_{n \to \infty} \mathbb{P}(|\hat{\theta}_n - \theta| > \epsilon) = 0$ for arbitrary $\epsilon$.
+\item In other words, estimates (produced by the estimator) "converge" to the true parameter value.
+\end{itemize}
+
+\begin{hintbox}
+    An unbiased estimator may not be consistent. Two simple examples:
+    \begin{prfbox}
+    \begin{itemize}
+    \item The variance estimator $\frac{1}{n} \sum (y_i - y_n)^2$ is biased but consistent.
+    \item The data point $X_1$ as an estimator of $\mu$ for $N(\mu, \sigma^2)$ is unbiased but NOT consistent.
+    \end{itemize}
+    \end{prfbox}
+\end{hintbox}
+
+\subsubsection{How does MC fare under those criteria?}
+\textbf{(1) On Convergence:}
+For MC, under varying learning rate $\alpha$, incremental MC will converge to true value of policy, $V^{\pi}(s_j)$ if 
+\begin{enumerate}
+\item $\sum_{n = 1}^{\infty} \alpha_n (s_j) = \infty$, but
+\item $\sum_{n = 1}^{\infty} \alpha_n^{2} (s_j) < \infty$.
+\end{enumerate}
+
+\textbf{(2) On MSE:}
+MC yields a \textcolor{blue}{high-variance estimator} that takes a lot of data to reduce.
+
+\end{document}
