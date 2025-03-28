@@ -328,7 +328,7 @@ This is more rigorously defined as follows:
             \item There is a maximum number of policy iterations (since a finite number of options for each finite state).
         \end{itemize}
     \end{prfbox}
-    \subsubsection*{Why state action value is defined?}
+    \subsubsection*{Why state action value is defined? Why store Q instead of V?}
     \begin{prfbox}
         \begin{itemize}
             \item It evaluates the expected return \textcolor{magenta}{taking action $a$ a first}, then act optimally afterward.
@@ -564,4 +564,170 @@ For MC, under varying learning rate $\alpha$, incremental MC will converge to tr
 \textbf{(2) On MSE:}
 MC yields a \textcolor{blue}{high-variance estimator} that takes a lot of data to reduce.
 
+\section{Value Function Approximation}
+Recall in optimizing policy $\pi$, we can either \textbf{evaluate} (compute $Q^{\pi}$) or \textbf{improve} (update $\pi$ given $Q^{\pi}$).
+
+Problem: Deterministic policies in approximation yield \textcolor{red}{no exploration!}
+\begin{itemize}
+\item If $\pi$ deterministic, $Q(s, a)$ is undefined for $a \neq \pi(s)$. Can't learn about actions without trying them!
+\item Exploitation of past experience that proved high reward. 
+\end{itemize}
+
+Solution: Assign probability on unvisited pathways!
+\begin{itemize}
+\item $\epsilon$-greedy pathways selects argmax action with \textcolor{blue}{$1-\epsilon$ probability}, else random. i.e.
+    $\pi(a | s) =$ 
+    \left\{
+    \begin{aligned}
+        &\mathop{\arg\max}\limits_{a} Q(s, a), & ~\text{probability}~~ \textcolor{blue}{1 - \epsilon} + \frac{\epsilon}{|A|} \\
+        &a' \neq \mathop{\arg\max}\limits_{a} Q(s, a), & ~\text{probability}~~ \frac{\epsilon}{|A|} \\
+    \end{aligned}
+    \right.
+\item $\epsilon$-greedy policy guarantees monotonic improvement, and can estimate $Q(s, a) \forall s, a$.
+\end{itemize}
+
+\subsubsection{Greedy in Limit of Infinite Exploration (GLIE)}
+\begin{defbox}
+    GLIE: If $\lim_{i \to \infty} N_i(s, a) \to \infty$ (i.e. all state-action pairs visited infinite times)
+    \begin{itemize}
+    \item Behavior policy (policy used to act in the world) converges to greedy policy
+    \item GLIE is $\epsilon$-greedy if $\epsilon = \frac{1}{i} \to 0$.
+    \item MC under GLIE converges to optimal value, i.e. $Q(s, a) \to Q^{*}(s, a)$
+    \end{itemize}
+\end{defbox}
+
+\begin{hintbox}
+    Q: What is the convergence to optimal $Q^{*}$ function and the expected performance of MC control with $\epsilon$-greedy policy?
+    \\When may MC online control fail to compute the optimal $Q^{*}$?
+\end{hintbox}
+
+Other than on-policy learning (through direct experience following the policy), \textbf{off-policy} learning exists (experience gathered from \textcolor{blue}{following a different policy}).
+\\In particular, Q-learning is a popular area of off-policy learning:
+\begin{defbox}
+    \subsubsection*{Q-learning Definition and Properties}
+    \begin{itemize}
+        \item Q-learning estimates $Q^{\pi^{*}}$ by acting with another $\pi_b$ by maintaining $Q$ estimates and bootstrapping.
+        \item Update step: 
+            \begin{equation*}
+                Q(s_t, a_t) = Q(s_t, a_t) + \alpha \left( [r_t + \gamma \textcolor{blue}{\mathop{\arg\max}\limits_{a'} Q(s_{t+1}, a')} - Q(s_t, a_t)] \right)
+            \end{equation*}
+            where $\textcolor{blue}{\mathop{\arg\max}\limits_{a'} Q(s_{t+1}, a')}$ is by following another behaviour policy.
+        \item Take $a_t \sim \pi_b(s_t)$: Sample action from $\epsilon$-greedy policy. Here $\pi_b$ is $\epsilon$-greedy w.r.t. $Q$.
+        \item It builds results through stochastic approximation, decreasing step sizes to satisfy Bellman contraction property, and utilizing bounded rewards and value function.
+    \end{itemize}
+\end{defbox}
+
+Q-learning for finite-state and finite-action MDPs converges to optimal value $Q^{*}(s, a)$ given:
+\begin{itemize}
+\item Policy sequence $\pi_t(a|s)$ satisfies conditions of GLIE.
+\item $\sum_{t = 1}^{\infty} \alpha_t = \infty$ and $\sum_{t = 1}^{\infty} \alpha_t^2 < \infty$
+\end{itemize}
+
+\subsection{Function Approximation}
+Function \textbf{approximation} carries the following two purposes:
+\begin{enumerate}
+\item Avoid \textcolor{blue}{explicit storing/ learning} for every single state and action (model/ value/ policy)
+\item \textcolor{blue}{Compact representation}, generalized across states and actions (i.e. less memory and computation needed)
+\end{enumerate}
+There are \textbf{THREE} forms of approximation: \textcolor{blue}{bootstrapping, sampling, and VFA}.
+
+\textcolor{magenta}{With a model}, we carry out VFA by assuming we can "query $(s, a)$" to return $Q^{\pi}(s, a)$, i.e. supervised learning:
+\begin{defbox}
+    \subsubsection*{Model-based VFA: Process}
+    \begin{itemize}
+    \item \textbf{Objective}: \textbf{approximate representation} of $Q^{\pi}$ given \textcolor{magenta}{parameterized form $\hat{Q}(s, a; \mathbf{w})$}
+    \item \textbf{Input}: $\mathbf{w}$ is a parameter vector of weights.
+    \item \textbf{Method}: Minimize loss function between $Q^{\pi}(s, a)$ and approximation $\hat{Q}(s, a; \mathbf{w})$:
+        \begin{equation*}
+            J(\mathbf{w}) = \mathbb{E}_{\pi}[ \left(Q^{\pi} (s, a) - \hat{Q}(s, a; \mathbf{w}) \right)^2]
+        \end{equation*}
+    \item \textbf{Means}: Find local minimum with gradient descent
+        \begin{equation*}
+            \delta \mathbf{w} = -\frac{1}{2} \alpha \textcolor{orange}{\nabla_{\mathbf{w}} J(\mathbf{w})}
+        \end{equation*}
+    \item \textbf{Improvement}: \textcolor{blue}{Stochastic} gradient descent (SGD) uses finite (often one) sample to \textcolor{blue}{approximate gradient}
+        \begin{equation*}
+            \textcolor{orange}{\nabla_{\mathbf{w}} J(\mathbf{w})} = -2 \mathbb{E}_{\pi}[ Q^{\pi} (s, a) - \hat{Q}(s, a; \mathbf{w})] \nabla_{\mathbf{w}} \hat{Q}
+        \end{equation*}
+    \end{itemize}
+\end{defbox} 
+
+\begin{hintbox}
+    How does SGD differ from GD? What is "finite \# samples"?
+    [See answer from GPT]
+\end{hintbox}
+
+\subsubsection{VFA without Model}
+\textcolor{magenta}{Without a model (oracle)}, follow policy $\pi$/ prior data to estimate $V^{\pi}$ and $Q^{\pi}$.
+\begin{defbox}
+    \subsubsection*{Model-free VFA: Process}
+    \begin{itemize}
+    \item \textbf{Input}: Generated sample paths by following fixed policy $\pi$.
+    \item \textbf{Method}: Through lookup table storing estimates of $V^{\pi}$ or $Q^{\pi}$
+        \\$\to$ Update estimates after each episode (MC)/ step (TD)
+    \item Change the estimate update step to include fitting \textcolor{blue}{function approximator}.
+        \\\textit{How?} ~~ Return $G_t$ is unbiased but noisy sample of true $Q^{\pi}(s_t, a_t)$
+        \\$\implies$Do supervised learning on $<(s_i, a_i), G_i>$.
+    \end{itemize}
+\end{defbox}
+
+\subsection{VFA under TDL}
+Recall that TDL uses \textcolor{blue}{bootstrapping and sampling} to approximate $V^{\pi}$:
+\begin{equation*}
+    V^{\pi}(s) = V^{\pi}(s) + \alpha \left( \textcolor{orange}{r + \gamma V^{\pi}(s')} - V^{\pi}(s) \right)
+\end{equation*}
+where the temporal target $\textcolor{orange}{r + \gamma V^{\pi}(s')}$ is \textbf{biased} against $V^{\pi}(s)$.
+\begin{itemize}
+\item When with a look table, represent each state value with a separate table entry.
+\item in VFA, target is $\textcolor{orange}{r + \gamma V^{\pi}(s' \textbf{; \mathbf{w}})}$, also \textbf{biased} against $V^{\pi}(s)$.
+\item Equivalent to supervised learning on $<(s_i, r_i), \textcolor{orange}{\gamma \hat{V}^{\pi} (s_{i+1}; \mathbf{w})}>$ and finding weights $\mathbf{w}$ to minimize MSE with SGD:
+\begin{equation*}
+    J(\mathbf{w}) = \mathbb{E}_{\pi}[ \left( \textcolor{orange}{r_j + \gamma V^{\pi} (s_{j+1}, \mathbf{w})} - \hat{V}(s_j; \mathbf{w}) \right)^2]
+\end{equation*}
+\end{itemize}
+
+\begin{hintbox}
+    Question: Why the function involve $V$ here but not $Q$ like in model-based VFA?
+\end{hintbox}
+
+\subsubsection{Control using VFA}
+Intuitively the few main points are:
+\begin{itemize}
+\item \textbf{Estimation}: $Q^{\pi}(s, a; \mathbf{w}) \approx Q^{\pi}$ by \textbf{sampling} gradients from SGD, for local minimum. 
+\item \textbf{Interleaving}: \textcolor{blue}{Perform $\epsilon$-greedy policy improvement} between VFA approximations.
+\end{itemize}
+
+There are a few incremental approaches to determine the increment $\Delta \mathbf{w}$ for action-value function approximation:
+\begin{enumerate}
+\item \textbf{General form}: use \textcolor{cyan}{target value} 
+    \begin{center}
+        $\Delta \mathbf{w} = \alpha( \textcolor{cyan}{Q(s_t, a_t)} - \hat{Q}(s_t, a_t; \mathbf{w}) ) \nabla_{\mathbf{w}} \hat{Q}(s_t, a_t; \mathbf{w})$ 
+    \end{center}
+\item \textbf{MC Simulation}: use \textcolor{cyan}{return $G_t$} as substitute target
+    \begin{center}
+        $\Delta \mathbf{w} = \alpha( \textcolor{cyan}{G_t} - \hat{Q}(s_t, a_t; \mathbf{w}) ) \nabla_{\mathbf{w}} \hat{Q}(s_t, a_t; \mathbf{w})$ 
+    \end{center}
+\item \textbf{SARSA}: use \textcolor{cyan}{TD target, i.e. $r + \gamma \hat{Q}(s', a'; \mathbf{w})$} 
+    \begin{center}
+        $\Delta \mathbf{w} = \alpha( \textcolor{cyan}{r + \gamma \hat{Q}(s', a'; \mathbf{w})} - \hat{Q}(s, a; \mathbf{w}) ) \nabla_{\mathbf{w}} \hat{Q}(s, a; \mathbf{w})$ 
+    \end{center}
+\item \textbf{Q-Learning}: use \textcolor{cyan}{related TD target} to SARSA
+    \begin{center}
+        $\Delta \mathbf{w} = \alpha( \textcolor{cyan}{
+            r + \gamma \mathop{\arg\max}\limits_{a'} Q(s', a'; \mathbf{w})
+        } - \hat{Q}(s, a; \mathbf{w}) ) \nabla_{\mathbf{w}} \hat{Q}(s, a; \mathbf{w})$ 
+    \end{center}
+\end{enumerate}
+
+\begin{hintbox}
+    Q: What is the original purpose of interleaving? How does it cause problems?
+    Q: Recall, how is the target value in general form VFA increment determined?
+    Q: Recall why is there $t$ in MC/ General form for $s$ and $a$ but NOT SARSA/ Q-learning?
+    Q: Recall: What are the major differences between SARSA and Q-learning by tweaking the TD target?
+\end{hintbox}
+
+\subsection{Deadly Triad and Remedies}
+\begin{hintbox}
+    "Bellman operators are contractions, but value function approximation fitting can be an expansion". What does this mean?
+\end{hintbox}
 \end{document}
