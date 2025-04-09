@@ -1,0 +1,185 @@
+\documentclass{article}
+\usepackage{minted}
+\input{preamble-eng}
+\title{Stanford CS234: Lectures 4 to 6}
+\begin{document}
+
+\section{Lecture 4: Model Free Control and Function Approximation}
+
+\section{Lecture 5: Policy Gradient and Search}
+Policy gradient/ search is influential in NLP/ Proximal Policy Optimization (training GPT). The core idea:
+
+\begin{defbox}
+    \subsubsection*{Intuition of Gradient Research}
+    Approximate $V^{\pi}(s) \approx V_{W}(s)$ and $Q_w(s, a) \approx Q^{\pi}(s, a)$ by adjusting weight $w$.
+    \\\textbf{Policy} gradient: rather than generating policy from value ($\epsilon$-greedy), directly parametrize policy with $\theta$, i.e.
+    \begin{center}
+        $\pi_{\theta} (s, a) = \mathbb{P}[a | s; \theta]$: optimize $V(\theta)$ to find policy $\pi$
+    \end{center}
+\end{defbox}
+
+The brief classification of policy gradient is as follows:
+\begin{center}
+    \begin{tabular}{|c||c|c|c|}
+    \hline
+    &  & Value-based & Policy-based & Actor-critic \\ \hline
+    Value function & learned & not present & learned \\ \hline
+    Policy & implicit ($\epsilon$-greedy) learned & learned\\ \hline
+    \end{tabular}
+\end{center}
+
+Instead of deterministic/ $\epsilon$-greedy policies, need to focus heavily on \textbf{stochastic} for direct policy search!
+\begin{itemize}
+\item Repeated Trials, e.g. In rock paper scissors (of many rounds), deterministic policy is easily exploited by adversary.
+\item Boundary Condition, e.g. In gridworld, bound to only move one direction (else get stuck/ traverse for long time for slow convergence).
+\end{itemize}
+
+In short, poliy objective functions have the following intuition:
+\begin{defbox}
+    \subsubsection*{Policy Objective Summary}
+    \begin{itemize}
+    \item Goal: Given policy $\pi_{\theta}(s, a)$, find best parameter $\theta$.
+        \\Inherently, an optimization of $V(s_0, \theta)$.
+    \item Purpose: Measure quality for policy $\pi_{\theta}$ with policy value at start state $s_0$.
+    \item Works for: both episodic/ continuing and infinite horizons.
+    \end{itemize}
+\end{defbox}
+
+\subsection{Gradient Free Policy Optimization}
+They are great simple baselines.
+\begin{itemize}
+\item Examples: Hill Climbing, Genetic Algo (evolution strategies, cross-entropy method, covariance matrix adaption)
+\item Known for decades but embarrassingly well: rivals standard RL techniques!
+\item Advantages: Flexible for any policy parameterization, easily to parallelize
+    \\Disadvantage: Less sample efficient (ignores temporal structure)
+\end{itemize}
+
+\subsection{Policy Gradient}
+This section focuses on gradient descent; other popular algos include conjugate gradient and quasi-newton methods.
+\\Usually assume \textbf{Episodic MDPs} for easy extension of objectives. The method:
+\begin{thmbox}
+    Define $V(\theta) = V(s_0, \theta)$, i.e. the value fucntion depending on policy parameters. Then:
+    \begin{itemize}
+    \item Search the local maximum in $V(s_0, \theta)$ with gradient increments:
+        \begin{equation*}
+            \Delta \theta = \alpha \nabla_{\theta} V(s_0, \theta) = \alpha
+            \begin{pmatrix}
+                \frac{\partial V(s_0, \theta)}{\partial \theta_{1}} \\
+                \vdots \\
+                \frac{\partial V(s_0, \theta)}{\partial \theta_{n}}
+            \end{pmatrix}
+        \end{equation*}
+    \item Assumption: $\pi_{\theta}$ differentiable (and known gradient $\nabla_{\theta} \pi_{\theta}(s, a)$)
+    \item We can rewrite policy value $V(s_0, \theta)$ in the following ways:
+        \begin{enumerate}
+        \item \textbf{Visited States and Actions}: 
+            $\mathbb{E}_{\pi_{\theta}} \left[ \sum_{t = 0}^{T} R(s_t, a_t); \pi_{\theta}, s_0 \right]$
+        \item \textbf{Weighted Average of Q-values by Actions}:
+            $\sum_{a} \pi_{\theta} (a | s_0) Q(s_0, a, \theta)$
+        \item \textbf{Trajectories Sampled using $\pi_{\theta}$}: 
+            $\sum_{\tau} P(\tau | \theta) R(\tau)$
+        \end{enumerate}
+    \end{itemize}
+\end{thmbox}
+
+In particular, it is of interest to consider writing $V(s_0, \theta)$ in trajectory form:
+\begin{prfbox}
+    To find the best policy parameter $\theta$, we consider
+    \begin{equation*}
+        \mathop{\arg\max}\limits_{\theta} V(\theta)
+        =
+        \mathop{\arg\max}\limits_{\theta} \sum_{\tau} P(\tau ; \theta) R(\tau)
+    \end{equation*}
+    Taking gradient,
+    \begin{aligned}
+        \nabla_{\theta} V(\theta) =
+        & \nabla_{\theta} \sum_{\tau} P(\tau; \theta) R(\tau) \\
+        & \sum_{\tau} \nabla_{\theta} P(\tau; \theta) R(\tau) \text{($R$ being indep of $\theta$)}\\
+        & \sum_{\tau} \frac{P(\tau; \theta)}{P(\tau; \theta)} \nabla_{\theta} P(\tau; \theta) R(\tau) \\
+        & \sum_{\tau} R(\tau) P(\tau; \theta) \nabla_{\theta} \textcolor{orange}{\log P(\tau; \theta)} ~~~~\text{(log-likelihood)} \\
+    \end{aligned}
+
+    \textbf{Approximate} in practice using $m$ sample trajectories under $\pi_{\theta}$:
+    \begin{equation*}
+        \nabla_{\theta} V(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i = 1}^{m} R(\tau^{(i)}) \nabla_{\theta} \log P(\tau^{(i)}, \theta)
+    \end{equation*}
+\end{prfbox}
+
+But trajectories can be decomposed into states and actions:
+\begin{prfbox}
+    \begin{aligned}
+        \nabla_{\theta} \log P(\tau^{(i)}; \theta) =
+        & \nabla_{\theta} \log \left[ \textcolor{cyan}{\mu(s_0)} 
+            \textcolor{magenta}{\prod_{t = 0}^{T-1} \pi_{\theta} (a_t | s_t)}
+            \textcolor{orange}{P(s_{t+1} | a_{t+1}, s_{0:t}, a_{0:t})} \right] \\
+        & \textcolor{magenta}{\sum_{\tau}} \nabla_{\theta} \log \textcolor{magenta}{\pi_{\theta} (a_t | s_t)} \\
+    \end{aligned}
+\end{prfbox}
+
+Here 
+    \begin{itemize}
+    \item We call $\sum_{\tau} \nabla_{\theta} \log \pi_{\theta} (a_t | s_t)$ the \textbf{score function}.
+    \item \textcolor{cyan}{the initial state $\mu(s_0)$ is constant};  
+        \textcolor{orange}{dynamics model $P(s_{t+1} | a_{t+1}, s_{0:t}, a_{0:t})$ is invariant to $\theta$.}
+    \item In other words, no dynamics model is required to approximate the policy parameter $\theta$.
+    \end{itemize}
+
+\begin{hintbox}
+    \textbf{Questions}
+    \begin{enumerate}
+    \item Why trajectory form is practical ("better in training")?
+    \item Why is log-likelihood ratio important here? What does it enable?
+    \end{enumerate}
+\end{hintbox}
+
+\subsection{Selecting a Right Policy}
+
+\subsubsection{Softmax Policy}
+\begin{itemize}
+\item In softmax, \textbf{exponentially weight} quantities of linear combination of features as probabilities (that add to 1):
+    \begin{equation*}
+        \pi_{\theta}(s, a) = \frac{e^{\phi (s, a)^{T} \theta}}{\sum_{a} e^{\phi (s, a)^{T} \theta}}
+    \end{equation*}
+\item Then the score function can be written as $\nabla_{\theta}(s, a) = \phi(s, a) - \mathbb{E}_{\pi_{\theta} \[ \phi(s, \cdot)\]}$
+\end{itemize}
+
+\subsubsection{Gaussian Policy}
+\begin{itemize}
+\item A normal distribution is natural for continuous action spaces; at times used by deep NN.
+\item Action $a \sim N(\mu(s), \sigma^2)$. Mean $\mu(s) = \textcolor{cyan}{\phi(s)}^{T} \textcolor{orange}{\theta}$ is a \textcolor{orange}{linear combination} of \textcolor{cyan}{state features}. 
+\item Then the score function can be written as $\nabla_{\theta}(s, a) = \phi(s, a) - \mathbb{E}_{\pi_{\theta}} \left[ \phi(s, \cdot)\right]$
+\end{itemize}
+
+When to use policy gradient?
+\begin{enumerate}
+\item Differentiable reward functions
+\item No dynamics required
+\item Useful for both infinite horizon and episodic settings
+\item Intuition: $R(\tau^{(i)})$ is replacable by other functions that \textit{measures the wellness of sample $x$}
+    \\Essentially, moving in the direction of $\hat{g_{i}} = f(x_i) \nabla_{\theta} \textcolor{orange}{\log p(x_i | \theta)}$ pushes up the \textcolor{orange}{log probability} proportionally.
+\end{enumerate}
+
+\begin{hintbox}
+    What are the purposes of selecting Softmax and Gaussian policies?
+\end{hintbox}
+
+The generalization is as follows:
+\begin{thmbox}
+    \subsubsection*{Policy Gradient Theorem}
+    Assumption: Differentiable Policy $\pi_{\theta}(s, a)$, objective $J = $
+    \begin{aligned}
+        J_1 & \text{(Episodic)} \\
+        J_{avR} & \text{(Avg. Reward over time)} \\
+        \frac{1}{1 - \gamma} J_{avV} & \text{(Avg. Value over time)} \\
+    \end{aligned}
+    
+    In any case, the policy gradient is 
+    $\nabla_{\theta} J(\theta) = \mathbb{E}_{\pi_{\theta}} \left[ \nabla_{\theta} \log \pi_{\theta} (s, a) Q^{\pi_{\theta}} (s, a)\right]$
+\end{thmbox}
+
+\subsection{VFA under TDL}
+
+
+\section{Lecture 5-6: Remedies to Reduce Variance in Policy Gradient}
+
+\end{document}
