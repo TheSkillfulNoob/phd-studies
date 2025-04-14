@@ -1,12 +1,12 @@
 \documentclass{article}
 \usepackage{minted}
 \input{preamble-eng}
-\title{Stanford CS234: Lectures 5 to 6}
+\title{Stanford CS234: Lectures 5 to 7}
 \begin{document}
 
-\section{Lecture 5: Policy Gradient and Search}
 Policy gradient/ search is influential in NLP/ Proximal Policy Optimization (training GPT). The core idea:
 
+\section{Why Policy Gradient, not Value Based?}
 \begin{defbox}
     \subsubsection*{Intuition of Gradient Search}
     Approximate $V^{\pi}(s) \approx V_{W}(s)$ and $Q_w(s, a) \approx Q^{\pi}(s, a)$ by adjusting weight $w$.
@@ -32,19 +32,8 @@ Instead of deterministic/ $\epsilon$-greedy policies, need to focus heavily on \
 \item Boundary Condition, e.g. In gridworld, bound to only move one direction (else get stuck/ traverse for long time for slow convergence).
 \end{itemize}
 
-In short, poliy objective functions have the following intuition:
-\begin{defbox}
-    \subsubsection*{Policy Objective Summary}
-    \begin{itemize}
-    \item Goal: Given policy $\pi_{\theta}(s, a)$, find best parameter $\theta$.
-        \\Inherently, an optimization of $V(s_0, \theta)$.
-    \item Purpose: Measure quality for policy $\pi_{\theta}$ with policy value at start state $s_0$.
-    \item Works for: both episodic/ continuing and infinite horizons.
-    \end{itemize}
-\end{defbox}
-
 \subsection{Gradient Free Policy Optimization}
-They are great simple baselines.
+We begin with simple (but great) gradient-free baselines.
 \begin{itemize}
 \item Examples: Hill Climbing, Genetic Algo (evolution strategies, cross-entropy method, covariance matrix adaption)
 \item Known for decades but embarrassingly well: rivals standard RL techniques!
@@ -52,13 +41,27 @@ They are great simple baselines.
     \\Disadvantage: Less sample efficient (ignores temporal structure)
 \end{itemize}
 
+\section{Main Objective and Log-likelihood Trick for Policy Gradient}
+
 \subsection{Policy Gradient}
 This section focuses on gradient descent; other popular algos include conjugate gradient and quasi-newton methods.
-\\Usually assume \textbf{Episodic MDPs} for easy extension of objectives. The method:
-\begin{thmbox}
-    Define $V(\theta) = V(s_0, \theta)$, i.e. the value fucntion depending on policy parameters. Then:
+\\We assume \textbf{Episodic MDPs} for easy extension of objectives. We first outline the problem as follows:
+
+\begin{defbox}
+    \subsubsection*{Policy Objective Summary}
     \begin{itemize}
-    \item Search the local maximum in $V(s_0, \theta)$ with gradient increments:
+    \item Goal: Given policy $\pi_{\theta}(s, a)$, find best parameter $\theta$.
+        Inherently, an optimization of $V(s_0, \theta)$ (i.e. the value fucntion depending on policy parameters).
+    \item Purpose: Measure quality for policy $\pi_{\theta}$ with policy value at start state $s_0$.
+    \item Works for: both episodic/ continuing and infinite horizons.
+    \end{itemize}
+\end{defbox}
+
+The method:
+\begin{thmbox}
+    \subsubsection*{Vanilla Policy Gradient: Problem Formation}
+    \begin{itemize}
+    \item Search the local maximum of policy value $V(s_0, \theta)$ with gradient increments:
         \begin{equation*}
             \Delta \theta = \alpha \nabla_{\theta} V(s_0, \theta) = \alpha
             \begin{pmatrix}
@@ -68,7 +71,7 @@ This section focuses on gradient descent; other popular algos include conjugate 
             \end{pmatrix}
         \end{equation*}
     \item Assumption: $\pi_{\theta}$ differentiable (and known gradient $\nabla_{\theta} \pi_{\theta}(s, a)$)
-    \item We can rewrite policy value $V(s_0, \theta)$ in the following ways:
+    \item We can rewrite $V(s_0, \theta)$ in the following ways:
         \begin{enumerate}
         \item \textbf{Visited States and Actions}: 
             $\mathbb{E}_{\pi_{\theta}} \left[ \sum_{t = 0}^{T} R(s_t, a_t); \pi_{\theta}, s_0 \right]$
@@ -80,6 +83,7 @@ This section focuses on gradient descent; other popular algos include conjugate 
     \end{itemize}
 \end{thmbox}
 
+\subsection{Log-Likelihood Trick and Score}
 In particular, it is of interest to consider writing $V(s_0, \theta)$ in trajectory form:
 \begin{prfbox}
     To find the best policy parameter $\theta$, we consider
@@ -119,14 +123,29 @@ Here
     \item We call $\sum_{\tau} \nabla_{\theta} \log \pi_{\theta} (a_t | s_t)$ the \textbf{score function}.
     \item \textcolor{cyan}{the initial state $\mu(s_0)$ is constant};  
         \textcolor{orange}{dynamics model $P(s_{t+1} | a_{t+1}, s_{0:t}, a_{0:t})$ is invariant to $\theta$.}
-    \item In other words, no dynamics model is required to approximate the policy parameter $\theta$.
+    \item In other words, \textcolor{red}{no dynamics model is required} to approximate the policy parameter $\theta$.
     \end{itemize}
 
 \begin{hintbox}
     \textbf{Questions}
     \begin{enumerate}
     \item Why trajectory form is practical ("better in training")?
+        \begin{prfbox}
+            Two major reasons:
+            \begin{enumerate}
+            \item \textbf{Flexible}
+                \\"Black box access" that only requires \textcolor{blue}{generated trajectory rollouts} without differentiable envt. model.
+                \\Allows turning $\nabla_{\theta} P(\tau)$ into $P(\tau) \nabla_{\theta} \log P(\tau)$, i.e. unbiased gradient estimate with simplicity.
+            \item \textbf{Easy Implementation}
+                \\Transition probabilities $P(s_{t+1} | s_t, a_t)$ don't appear in gradient after log derivative.
+                \\Only actions, episodes, states and rewards (not $P$) to compute gradient!
+            \end{enumerate}
+        \end{prfbox}
     \item Why is log-likelihood ratio important here? What does it enable?
+        \begin{prfbox}
+            Log trick enables PG without environment back-propagation.
+            \\Without model $\mathbf{P}$ required, log likelihood enables additive (instead of multiplicative) decomposition.
+        \end{prfbox}
     \end{enumerate}
 \end{hintbox}
 
@@ -139,38 +158,63 @@ Here
         \pi_{\theta}(s, a) = \frac{e^{\phi (s, a)^{T} \theta}}{\sum_{a} e^{\phi (s, a)^{T} \theta}}
     \end{equation*}
 \item Then the score function can be written as 
-    $\nabla_{\theta}(s, a) = \phi(s, a) - \mathbb{E}_{\pi_{\theta} [ \phi(s, \cdot) ]}$
+    $\nabla_{\theta} \log \pi_{\theta}(s, a) = \phi(s, a) - \mathbb{E}_{\pi_{\theta} [ \phi(s, \cdot) ]}$
 \end{itemize}
 
 \subsubsection{Gaussian Policy}
 \begin{itemize}
 \item A normal distribution is natural for continuous action spaces; at times used by deep NN.
 \item Action $a \sim N(\mu(s), \sigma^2)$. Mean $\mu(s) = \textcolor{cyan}{\phi(s)}^{T} \textcolor{orange}{\theta}$ is a \textcolor{orange}{linear combination} of \textcolor{cyan}{state features}. 
-\item Then the score function can be written as $\nabla_{\theta}(s, a) = \phi(s, a) - \mathbb{E}_{\pi_{\theta}} \left[ \phi(s, \cdot)\right]$
+\item Then the score function can be written as $\nabla_{\theta} \log \pi_{\theta}(s, a) = \frac{(a - \mu(s)) \phi(s)}{\sigma^2} $
 \end{itemize}
-
-When to use policy gradient?
-\begin{enumerate}
-\item Differentiable reward functions
-\item No dynamics required
-\item Useful for both infinite horizon and episodic settings
-\item Intuition: $R(\tau^{(i)})$ is replacable by other functions that \textit{measures the wellness of sample $x$}
-    \\Essentially, moving in the direction of $\hat{g_{i}} = f(x_i) \nabla_{\theta} \textcolor{orange}{\log p(x_i | \theta)}$ pushes up the \textcolor{orange}{log probability} proportionally.
-\end{enumerate}
 
 \begin{hintbox}
     What are the purposes of selecting Softmax and Gaussian policies?
+    \begin{prfbox}
+        Policy classes should allow \textcolor{blue}{(1) Easy action sampling} and \textcolor{blue}{(2) Straightforward gradient $\nabla_{\theta} \log \pi_{\theta}(s, a)$ computation}.
+        \\The two policies are both differentiable, allowing (2). For (1):
+        \begin{itemize}
+        \item \textbf{Softmax}: \textbf{Discrete} action probabilities that returns a nice (simple) gradient form.
+        \item \textbf{Gaussian}: \textbf{Continuous} actions featuring straightforward gradient, common in robotics/ continuous control. 
+        \end{itemize}
+    \end{prfbox}
 \end{hintbox}
 
-The generalization is as follows:
+\subsection{Summary: PG}
+A summary of policy gradient:
+\begin{defbox}
+    \subsubsection*{Intermediate Summary of PG}
+    \begin{itemize}
+    \item Core idea: $\nabla_{\theta} V(\theta) = \mathbb{E}_{\pi_{\theta}} \left[ \nabla_{\theta} \textcolor{cyan}{\log \pi_{\theta} (s, a)} \textcolor{blue}{Q^{\pi_{\theta}} (s, a)} \right]$
+        \\\begin{prfbox}
+            Optimize $\mathop{\arg\max}\limits_{\theta} J(\pi_{\theta}) = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t = 0}^{\infty} \gamma^{t} r_{t}\right]$ with SGD on $\theta$:
+            \begin{equation*}
+                g = \nabla_{\theta} J(\pi_{\theta}) = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t = 0}^{\infty} \gamma^{t} \nabla_{\theta} \log \pi_{\theta} (a_t | s_t) A^{\pi_{\theta}} (s_t, a_t) \right]
+            \end{equation*}
+        \end{prfbox}
+    \item State-action pairs with higher $\hat{Q}$ increases probabilities in average
+    \item Direction of $\theta$ dependent on gradient of \textcolor{cyan}{$\ln \pi(S_t, A_t, \theta)$} AND \textcolor{blue}{Q-values/ returns}
+    \item NOT guaranteed to converge to global optima (just local!)
+    \end{itemize}
+
+    \textbf{When to use?}
+    \begin{enumerate}
+    \item Differentiable reward functions; No dynamics required
+    \item Useful for both infinite horizon and episodic settings
+    \item Intuition: $R(\tau^{(i)})$ is replacable by other functions that \textit{measures the wellness of sample $x$}
+        \\Essentially, moving in the direction of $\hat{g_{i}} = f(x_i) \nabla_{\theta} \textcolor{orange}{\log p(x_i | \theta)}$ pushes up the \textcolor{orange}{log probability} proportionally.
+    \end{enumerate}
+\end{defbox}
+
+The generalization of PG is as follows:
 \begin{thmbox}
     \subsubsection*{Policy Gradient Theorem}
-    Assumption: Differentiable Policy $\pi_{\theta}(s, a)$, objective $J = 
-    \begin{aligned}
+    Assumption: Differentiable Policy $\pi_{\theta}(s, a)$, objective $J =$ 
+    \begin{cases}
         J_1 & \text{(Episodic)} \\
         J_{avR} & \text{(Avg. Reward over time)} \\
         \frac{1}{1 - \gamma} J_{avV} & \text{(Avg. Value over time)} \\
-    \end{aligned}$
+    \end{cases}
     
     In any case, the policy gradient is 
     $\nabla_{\theta} J(\theta) = \mathbb{E}_{\pi_{\theta}} \left[ \nabla_{\theta} \log \pi_{\theta} (s, a) Q^{\pi_{\theta}} (s, a)\right]$
@@ -187,6 +231,9 @@ The generalization is as follows:
     \end{tabular}
 \end{center}
 
+\section{Variance Issues and Remedies}
+
+\subsection{Problem: High Variance in PG}
 \begin{defbox}
     Currently, use
     \begin{equation*}
@@ -200,7 +247,7 @@ The generalization is as follows:
 \end{defbox}
 On the high variance, several remedies serve as improvements:
 
-\subsubsection{Fix 1: Temporal Structure}
+\subsection{Fix 1: Temporal Structure}
 \begin{itemize}
 \item Focus on \textcolor{blue}{single reward item} at once:
     \begin{equation*}
@@ -229,9 +276,16 @@ On the high variance, several remedies serve as improvements:
 
 \begin{hintbox}
     Q: How does Temporal structure reduce variance?
+    \begin{prfbox}
+        \begin{itemize}
+        \item Each $r_{t'}$ is paired with actions ONLY from time 0 to $t'$.
+        \item Actions after $t'$ \textcolor{blue}{does NOT affect $r_{t'}$}:
+            \\Assigning rewards to ONLY actions that influence it achieves noise reduction.
+        \end{itemize}
+    \end{prfbox}
 \end{hintbox}
 
-\subsubsection{Fix 2: Baseline Function}
+\subsection{Fix 2: Baseline Function}
 As iteration costs time and computational resources, we desire \textcolor{blue}{quick convergence} to local optima.
 
 \begin{thmbox}
@@ -247,41 +301,63 @@ As iteration costs time and computational resources, we desire \textcolor{blue}{
     \item Other choices: State-value function $V^{\pi}(s) = \mathbb{E}_{a \sim \pi} \left[ Q^{\pi} (s, a) \right]$
     \end{itemize}
     \textbf{Interpretation}: Increase logprob of action at proportionally to how much returns 
-    $\sum^{T-1}_{t'= t} r_{t'}$ are better than expected
+    $\sum^{T-1}_{t'= t} r_{t'}$ are better than expected.
 \end{thmbox}
+
+Mathematically, baseline functions achieve variance reduction as follows:
+\begin{prfbox}
+    \textbf{Core idea: Break down $t$} in the summation:
+    \begin{itemize}
+    \item As we sample from trajectories $\tau$ (MC),
+        $\begin{aligned}
+            \text{Var}[ \nabla_{\theta} [R]] & 
+            = \text{Var}[ \sum_{t = 0}^{T-1} \nabla_{\theta} \log \pi(a_t | s_t; \theta) (R_t (s_t) - b(s_t))]\\ & 
+            \approx \sum_{t = 0}^{T-1} \mathbb{E}_{\tau} \left[ \text{Var}[\nabla_{\theta} \log \pi(a_t|s_t ; \theta) (R_t(s_t) - b(s_t))] \right]\\
+        \end{aligned}$
+    \item For each $t$, write variance Var$[X]$ as $\mathbb{E}[X^2] - (\mathbb{E}[X])^2$:
+        \begin{equation*}
+            \mathbb{E}\left[\left((\nabla_{\theta} \log \pi(a_t | s_t ; \theta)) (R_t(s_t) - b(s_t)) \right)^2 \right]
+            - \textcolor{cyan}{\mathbb{E}\left[\left((\nabla_{\theta} \log \pi(a_t | s_t ; \theta)) (R_t(s_t) - b(s_t)) \right) \right]^2}
+        \end{equation*}
+    \item \textcolor{cyan}{Second term} is not affected by choice of $b(s)$ (\textcolor{cyan}{unbiased} = same expectation). 
+    \\
+        $\begin{aligned}
+            \text{The variance equals} & 
+            \mathop{\arg\min}\limits_{b} ~~\mathbb{E}\left[\left((\nabla_{\theta} \log \pi(a_t | s_t ; \theta))\right)^2 \left((G_t(s_t) - b(s_t)) \right)^2 \right]\\ 
+            = & \mathop{\arg\min}\limits_{b} ~~\mathbb{E}_{s \sim d^{\pi}}\left[ \mathbb{E}_{a \sim \pi(\cdot | s), G | s, a} \left[ \left((\nabla_{\theta} \log \pi(a_t | s ; \theta))\right)^2 \left((G_t(s_t) - b(s_t)) \right)^2 \right] \right]\\
+        \end{aligned}$
+    \item A \textbf{weighted least-squares} problem that minimizes
+        \begin{equation*}
+            \sum_{i} \sum_{t} |b(s^{i}_{t}) - \textcolor{blue}{G^{i}_{t}}|^2 \quad\quad \text{(\textcolor{blue}{$G$ (or $A = G - b$)} being target)}
+        \end{equation*}            
+        with solution (after taking zero gradient)
+        \begin{equation*}
+            b(s) \approx \mathbb{E}_{a \sim \pi(\cdot | s), G | s, a} [G_t (s)]
+        \end{equation*}
+    \end{itemize}
+\end{prfbox}
 
 \begin{hintbox}
     Q: Intuitively, what are the uses of baseline functions? How does variance get reduced?
     \begin{prfbox}
-        \textbf{Core idea: Break down $t$} in the summation:
         \begin{itemize}
-        \item As we sample from trajectories $\tau$ (MC),
-            $\begin{aligned}
-                \text{Var}[ \nabla_{\theta} [R]] & 
-                = \text{Var}[ \sum_{t = 0}^{T-1} \nabla_{\theta} \log \pi(a_t | s_t; \theta) (R_t (s_t) - b(s_t))]\\ & 
-                \approx \sum_{t = 0}^{T-1} \mathbb{E}_{\tau} \left[ \text{Var}[\nabla_{\theta} \log \pi(a_t|s_t ; \theta) (R_t(s_t) - b(s_t))] \right]\\
-            \end{aligned}$
-        \item For each $t$, write variance Var$[X]$ as $\mathbb{E}[X^2] - (\mathbb{E}[X])^2$:
-            \\$\mathbb{E}\left[\left((\nabla_{\theta} \log \pi(a_t | s_t ; \theta)) (R_t(s_t) - b(s_t)) \right)^2 \right]
-            - \mathbb{E}\left[\left((\nabla_{\theta} \log \pi(a_t | s_t ; \theta)) (R_t(s_t) - b(s_t)) \right) \right]^2$
-        \item Second term is not affected by choice of $b(s)$ (unbiased = same expectation). The variance equals
-            $\mathop{\arg\min}\limits_{b} ~~\mathbb{E}\left[\left((\nabla_{\theta} \log \pi(a_t | s_t ; \theta))\right)^2 \left((G_t(s_t) - b(s_t)) \right)^2 \right]$
-            \\$=\mathop{\arg\min}\limits_{b} ~~\mathbb{E}_{s \sim d^{\pi}}\left[ \mathbb{E}_{a \sim \pi(\cdot | s), G | s, a} \left[ \left((\nabla_{\theta} \log \pi(a_t | s ; \theta))\right)^2 \left((G_t(s_t) - b(s_t)) \right)^2 \right] \right]$
-        \item A \textbf{weighted least-squares} problem that minimizes
-            \begin{equation*}
-                \sum_{i} \sum_{t} |b(s^{i}_{t}) - \textcolor{blue}{G^{i}_{t}}|^2 \quad\quad \text{(\textcolor{blue}{$G$ (or $A = G - b$)} being target)}
-            \end{equation*}            
-            with solution (after taking zero gradient)
-            \begin{equation*}
-                b(s) \approx \mathbb{E}_{a \sim \pi(\cdot | s), G | s, a} [G_t (s)]
-            \end{equation*}
+        \item Second term: If $b(s)$ is "close" to true $V^{\pi}(s)$ (high correlation between the two), 
+            $G_t(s_t) - b(s_t)$ achieves lower variance.
+        \item First term: Log-probability only updates strongly (decisively, to increase variance) if significant return differences to baseline is observed.
         \end{itemize}
     \end{prfbox}
-
     Q: What does it mean by "Near optimal"? When is it not?
+    \begin{prfbox}
+        \begin{itemize}
+        \item According to above, when variance reduction of the second term $>$ variance increase of first term.
+            \\Usually the case as $b(s) \approx V^{\pi}(s)$ typically, achieving maximal variance reduction in theory.
+        \item If learned baseline is inaccurate (i.e. poor function approximator/ predictor), less reduction.
+            \\Extreme cases: Taking $b(s) = \text{const}$ or 0 could be better.
+        \end{itemize}
+    \end{prfbox}
 \end{hintbox}
 
-\subsubsection{Fix 3: Alternative to MC}
+\subsection{Fix 3: Actor-Critic}
 The original $G_{t}^{i}$ estimates expected discounted sum of returns (from single roll): unbiased but \textcolor{red}{high variance}.
 To solve this:
 \begin{itemize}
@@ -317,31 +393,21 @@ To solve this:
 \end{thmbox}
 
 \begin{hintbox}
-    What does the word "critic" here mean?
+    What do the words "actor" and "critic" mean?
+    \begin{prfbox}
+        \begin{itemize}
+        \item "actor": Policy $\pi_{\theta}$ selecting actions
+        \item "critic": VFA (say, trained via temporal-difference) to "criticize" actions chosen by actor 
+        \item Proposed $Q^{\pi}(s, a)$ or $A^{\pi}(s, a)$ serve as baselines/ targets for actor updates to reduce variance.
+        \end{itemize}
+    \end{prfbox}
 \end{hintbox}
 
-A summary of policy gradient:
-
-\begin{defbox}
-    \subsubsection*{Intermediate Summary of PG}
-    \begin{itemize}
-    \item Core idea: $\nabla_{\theta} V(\theta) = \mathbb{E}_{\pi_{\theta}} \left[ \nabla_{\theta} \textcolor{cyan}{\log \pi_{\theta} (s, a)} \textcolor{blue}{Q^{\pi_{\theta}} (s, a)} \right]$
-        \\\begin{prfbox}
-            Optimize $\mathop{\arg\max}\limits_{\theta} J(\pi_{\theta}) = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t = 0}^{\infty} \gamma^{t} r_{t}\right]$ with SGD on $\theta$:
-            \begin{equation*}
-                g = \nabla_{\theta} J(\pi_{\theta}) = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t = 0}^{\infty} \gamma^{t} \nabla_{\theta} \log \pi_{\theta} (a_t | s_t) A^{\pi_{\theta}} (s_t, a_t) \right]
-            \end{equation*}
-        \end{prfbox}
-    \item State-action pairs with higher $\hat{Q}$ increases probabilities in average
-    \item Direction of $\theta$ dependent on gradient of \textcolor{cyan}{$\ln \pi(S_t, A_t, \theta)$} AND \textcolor{blue}{Q-values/ returns}
-    \item NOT guaranteed to converge to global optima (just local!)
-    \end{itemize}
-\end{defbox}
-
-\subsection{Limitations of Vanilla Policy Gradient}
+\section{PPO and Its Two Variants}
+    \subsection{Problem: Poor Sample Efficiency of PG}
     A PG algo should minimize \# iterations to reach a good (probably suboptimal) policy within time. The limitations of vanilla PG:
     \subsubsection{Poor sample efficiency}
-    Variance reduces slowly, because PG is an \textbf{on-policy} expectation: Data immediately \textcolor{red}{discarded} after just one gradient step
+    Variance reduces slowly (even after improvements), because PG is an \textbf{on-policy} expectation: Data immediately \textcolor{red}{discarded} after just one gradient step
     \begin{itemize}
     \item Collect sample estimates from trajectories of same policy (more stable), or \textcolor{magenta}{other policies (off-policy, less stable)}.
     \item Opportunity: Can we take \textcolor{blue}{multiple gradient steps from old data} before new policy?
@@ -358,6 +424,7 @@ A summary of policy gradient:
         \end{itemize}
     \end{defbox}
 
+    \subsection{Policy Performance Bounds}
     The solution to restrict policy change from more than intended is through \textcolor{blue}{policy performance bounds}:
     \begin{defbox}
         \subsubsection*{Distance in Value to Policy}
@@ -416,15 +483,15 @@ A summary of policy gradient:
         \end{equation*}
     \end{thmbox}
 
-\subsection{Proximal Policy Optimization (PPO): Approximation in Action}
-PPO penalizes large policy change iterations. There are two methods: 
+\subsection{Variants of PPO}
+Taking advantage of policy performance bounds, PPO penalizes large policy change iterations. There are two methods: 
 \begin{enumerate}
 \item regularization term on KL-divergence (Adaptive Penalty)
 \item pessimistic objective on far-away policies (Clipped Objective)
 \end{enumerate}
 
 \begin{thmbox}
-    \subsubsection*{PPO Iterative Algorithm - Adaptive Penalty}
+    \subsubsection*{Adaptive Penalty}
     \begin{equation*}
         \theta_{k+1} = \mathop{\arg\max}\limits_{\theta} L_{\theta_k} (\theta) - \beta \bar{D}_{KL} (\theta || \theta_k)
     \end{equation*}
@@ -445,7 +512,7 @@ PPO penalizes large policy change iterations. There are two methods:
 
 An alternative approach is clipping: restrict via \textcolor{blue}{pessimistically treating objective value far away from $\theta_k$}.
 \begin{thmbox}
-    \subsubsection*{Outline of Clipped Objective on Policy Changes}
+    \subsubsection*{Clipped Objective on Policy Changes}
     \begin{itemize}
     \item Define relative probability change: $r_{t}(\theta) = \frac{\pi_{\theta} (a_t | s_t)}{\pi_{\theta_k} (a_t | s_t)}$ 
     \item The new objective is
@@ -475,11 +542,31 @@ PPO's performance consistently \textcolor{blue}{tops other algos, hence wildly p
 \item Different outcomes with reward scaling/ learning rate annealing.
 \end{itemize}
 
-
-
 \begin{hintbox}
-    Q1: Why KL-divergence applied is an expectation?
-    Q2: How does the two methods compare?
+    Why KL-divergence applied is an expectation?
+    \begin{prfbox}
+        \begin{itemize}
+        \item Recall that the two distributions (of the same variable) occurs in probabilities.
+        \item To compare, take average (expectation) over states (discounted distribution). 
+        \end{itemize}
+    \end{prfbox}
+    How does the two methods compare?
+    \begin{prfbox}
+        \textbf{KL Penalty}
+        \begin{itemize}
+        \item Idea: Tune penalty $\beta$ adaptively to control KL around the target threshold
+        \item Pros: Conceptually direct (literally penalize KL)
+        \item Cons: Tricky to schedule/ tune/ stabilize $\beta$
+        \end{itemize}
+
+        \textbf{Clipped Objective}
+        \begin{itemize}
+            \item Idea: Force objective $r_{t} \theta$ to plateau when significantly deviate from 1.
+            \item Pros: Simple to implement and good practical performance
+            \item Cons: Less direct than penalty/ constraint
+        \end{itemize}
+        In practice, \textcolor{magenta}{clipping} is much more common/ popular given \textcolor{magenta}{implementation and performance}.
+    \end{prfbox}
 \end{hintbox}
 
 \end{document}
