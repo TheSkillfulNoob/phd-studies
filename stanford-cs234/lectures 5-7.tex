@@ -209,13 +209,13 @@ A summary of policy gradient:
 The generalization of PG is as follows:
 \begin{thmbox}
     \subsubsection*{Policy Gradient Theorem}
-    Assumption: Differentiable Policy $\pi_{\theta}(s, a)$, objective $J =$ 
+    Assumption: Differentiable Policy $\pi_{\theta}(s, a)$, objective $J = 
     \begin{cases}
         J_1 & \text{(Episodic)} \\
         J_{avR} & \text{(Avg. Reward over time)} \\
         \frac{1}{1 - \gamma} J_{avV} & \text{(Avg. Value over time)} \\
     \end{cases}
-    
+    $
     In any case, the policy gradient is 
     $\nabla_{\theta} J(\theta) = \mathbb{E}_{\pi_{\theta}} \left[ \nabla_{\theta} \log \pi_{\theta} (s, a) Q^{\pi_{\theta}} (s, a)\right]$
 \end{thmbox}

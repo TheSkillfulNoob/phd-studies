@@ -1,7 +1,7 @@
 PWD c:\Users\85290\Documents\GitHub\ml-learning-spring2025\stanford-cs234
 INPUT C:\Users\85290\AppData\Local\MiKTeX\miktex\data\le\pdftex\pdflatex.fmt
-INPUT c:\Users\85290\Documents\GitHub\ml-learning-spring2025\stanford-cs234\lectures.tex
-OUTPUT lectures.log
+INPUT c:\Users\85290\Documents\GitHub\ml-learning-spring2025\stanford-cs234\lectures 5-7.tex
+OUTPUT lectures 5-7.log
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\base\article.cls
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\base\article.cls
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\base\size10.clo
@@ -405,7 +405,7 @@ INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\generic\pgf\frontendlayer
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibraryfadings.code.tex
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\generic\pgf\libraries\pgflibraryfadings.code.tex
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\generic\pgf\libraries\pgflibraryfadings.code.tex
-OUTPUT lectures.pdf
+OUTPUT lectures 5-7.pdf
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\tcolorbox\tcbposter.code.tex
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\tikz-cd\tikz-cd.sty
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\tikz-cd\tikz-cd.sty
@@ -429,7 +429,7 @@ INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\parskip\parskip.sty
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\parskip\parskip.sty
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
-OUTPUT lectures.aux
+OUTPUT lectures 5-7.aux
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
@@ -438,9 +438,7 @@ INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\epstopdf-pkg\epstop
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\00miktex\epstopdf-sys.cfg
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\00miktex\epstopdf-sys.cfg
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\00miktex\epstopdf-sys.cfg
-OUTPUT lectures.out
-INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmr12.tfm
-INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
+OUTPUT lectures 5-7.out
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmr12.tfm
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx10.tfm
@@ -469,21 +467,27 @@ INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\sym
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\tcrm1000.tfm
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\tcrm0700.tfm
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\tcrm0500.tfm
+INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmr12.tfm
+INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
 INPUT C:\Users\85290\AppData\Local\MiKTeX\fonts\map\pdftex\pdftex.map
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmti10.tfm
-INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmtt10.tfm
-OUTPUT lectures.thm
-INPUT lectures.aux
-INPUT .\lectures.out
-INPUT .\lectures.out
+INPUT .\lec6-clipped-values.png
+INPUT .\lec6-clipped-values.png
+INPUT .\lec6-clipped-values.png
+INPUT .\lec6-clipped-values.png
+INPUT .\lec6-clipped-values.png
+INPUT .\lec6-clipped-values.png
+INPUT .\lec6-clipped-values.png
+OUTPUT lectures 5-7.thm
+INPUT lectures 5-7.aux
+INPUT .\lectures 5-7.out
+INPUT .\lectures 5-7.out
 INPUT C:\Users\85290\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\tcrm1000.pk
 INPUT C:\Users\85290\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\tcrm1000.pk
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx10.pfb
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx10.pfb
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx12.pfb
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx12.pfb
-INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx7.pfb
-INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx7.pfb
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmex10.pfb
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmex10.pfb
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi10.pfb
@@ -494,8 +498,6 @@ INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\c
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi7.pfb
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmr10.pfb
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmr10.pfb
-INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmr5.pfb
-INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmr5.pfb
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmr7.pfb
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmr7.pfb
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy10.pfb
@@ -506,7 +508,5 @@ INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\c
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy7.pfb
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmti10.pfb
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmti10.pfb
-INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmtt10.pfb
-INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmtt10.pfb
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\symbols\msbm10.pfb
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\symbols\msbm10.pfb
