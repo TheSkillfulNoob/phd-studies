@@ -429,6 +429,9 @@ INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\parskip\parskip.sty
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\parskip\parskip.sty
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
+INPUT .\lectures 5-7.aux
+INPUT .\lectures 5-7.aux
+INPUT lectures 5-7.aux
 OUTPUT lectures 5-7.aux
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
 INPUT C:\Users\85290\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii

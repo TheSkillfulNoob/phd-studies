@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1744702318.53549 "c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures 5-7.tex" "lectures 5-7.pdf" "lectures 5-7" 1744702322.00378 2
+["pdflatex"] 1745522852.46439 "c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures 5-7.tex" "lectures 5-7.pdf" "lectures 5-7" 1745522854.78852 2
   "C:/Users/85290/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1744553771 94280 1ee488709fa9075226b89119a9fb83bb ""
   "C:/Users/85290/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1000.pk" 1742006369 11548 d607b6dc6085bdb24b416fdb98591772 ""
   "C:/Users/85290/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1742005694 12036089 3a187c18c6ba24e9f0e4023bfc82a8ef ""
@@ -287,11 +287,11 @@
   "C:/Users/85290/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/85290/AppData/Local/Programs/MiKTeX/tex/latex/wrapfig/wrapfig.sty" 1044403200 26220 3701aebf80ccdef248c0c20dd062fea9 ""
   "C:/Users/85290/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
-  "c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures 5-7.tex" 1744641585 31497 a3e6634388a291aeb1880e16719ac9fd ""
+  "c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures 5-7.tex" 1744706666 31497 56df08e8b75eeaa6a5ce3bfe04cb4533 ""
   "lec6-clipped-values.png" 1744619972 15147 cfb10df3305fc1c7f1d42c3240156ac3 ""
-  "lectures 5-7.aux" 1744702321 2774 d46e0e39563411ddab71c4eab04f63da "pdflatex"
-  "lectures 5-7.out" 1744702321 3657 426ebe67665d60a712a34be359973ffe "pdflatex"
-  "lectures 5-7.tex" 1744641585 31497 a3e6634388a291aeb1880e16719ac9fd ""
+  "lectures 5-7.aux" 1745522854 2774 d46e0e39563411ddab71c4eab04f63da "pdflatex"
+  "lectures 5-7.out" 1745522854 3657 426ebe67665d60a712a34be359973ffe "pdflatex"
+  "lectures 5-7.tex" 1744706666 31497 56df08e8b75eeaa6a5ce3bfe04cb4533 ""
   "preamble-eng.tex" 1739221207 5788 a0d3aefa9aee43e5ba3aada34a90f25a ""
   (generated)
   "lectures 5-7.aux"
