@@ -237,7 +237,7 @@ We can solve MDP as an MRP as follows:
     \subsubsection*{Solving MDP Iteratively}
     For $k = 1$ till convergence, for any $s \in S$, the state value function $V$ is iterated with:
     \begin{center}
-        $V_k^{π}(s) = \textcolor{orange}{\sum_{a} \pi(a | s)} \textcolor{cyan}{[r (s | a) + \gamma \sum_{s' \in S} P(s' | s,a) V_{k-1}^\pi(s')]}$ 
+        $V_k^{\pi}(s) = \textcolor{orange}{\sum_{a} \pi(a | s)} \textcolor{cyan}{[r (s | a) + \gamma \sum_{s' \in S} P(s' | s,a) V_{k-1}^\pi(s')]}$ 
         \quad\quad where $s' \in S$
     \end{center}
     \textit{This is called a Bellman backup equation.}
@@ -247,7 +247,7 @@ We can solve MDP as an MRP as follows:
             \textcolor{cyan}{weighted by the value} (current reward + future rewards discounted by one step).
     \item For deterministic $\pi(s)$, i.e. $P(\pi(s) | s) = 1$, the formula reduces to
     \begin{center}
-        $V_k^{π}(s) = r (s | \pi(s)) + \gamma \sum_{s' \in S} P(s' | s, \pi(s)) V_{k-1}^\pi(s')$
+        $V_k^{\pi}(s) = r (s | \pi(s)) + \gamma \sum_{s' \in S} P(s' | s, \pi(s)) V_{k-1}^\pi(s')$
     \end{center}
     \end{itemize}
 \end{prfbox}
@@ -299,7 +299,7 @@ But why does PI guarantee generating better policies?
       \begin{center}
           $\pi_{i+1} (s) = \mathop{\arg\min}\limits_{a} Q^{\pi_i}{\pi}(s, a) \forall s \in S$
       \end{center}
-      \\is a deterministic quantity.
+      is a deterministic quantity.
 \item To improve the state-action value by varying $a$,
       \begin{center}
           $\mathop{\max}\limits_{a} Q^{\pi_i} (s, a) \geq
@@ -486,12 +486,12 @@ There are \textbf{Three variations} for MC:
         \item [(ii)] \textcolor{blue}{Every-time MC}: Increment $N(s)$ \textcolor{blue}{each time visiting state $s$} in episode $i$
         \item [(iii)] \textcolor{blue}{Incremental MC}: After obtaining the new return value $G_{i, t}$, rewrite the update from $V^{\pi}(s)$ to $V^{\pi}(s)'$:
             \begin{prfbox}
-                \begin{aligned}
+                $\begin{aligned}
                     V^{\pi}(s)' & = \frac{G(s)'}{N(s)'} = \frac{G(s) + G_{i, t}}{N(s) + 1} = \frac{\textcolor{cyan}{G(s)}}{N(s) + 1} + \frac{G_{i, t}}{N(s) + 1} \\
                     & = \textcolor{cyan}{V^{\pi}(s)} \times \frac{\textcolor{cyan}{N(s)}}{N(s) + 1} + \frac{G_{i, t}}{N(s) + 1} \\
                     & = \textcolor{cyan}{V^{\pi}(s)} + \textcolor{magenta}{\frac{1}{N(s) + 1}} \left( G_{i, t} - V^{\pi}(s) \right) \\
                     V^{\pi}(s)' & = \textcolor{cyan}{V^{\pi}(s)} + \textcolor{magenta}{\alpha} \left( G_{i, t} - V^{\pi}(s) \right)
-                \end{aligned}
+                \end{aligned}$
             \end{prfbox}
     \end{enumerate}
 \end{defbox}
@@ -576,13 +576,13 @@ Problem: Deterministic policies in approximation yield \textcolor{red}{no explor
 Solution: Assign probability on unvisited pathways!
 \begin{itemize}
 \item $\epsilon$-greedy pathways selects argmax action with \textcolor{blue}{$1-\epsilon$ probability}, else random. i.e.
-    $\pi(a | s) =$ 
+    $\pi(a | s) =$$ 
     \left\{
     \begin{aligned}
-        &\mathop{\arg\max}\limits_{a} Q(s, a), & ~\text{probability}~~ \textcolor{blue}{1 - \epsilon} + \frac{\epsilon}{|A|} \\
-        &a' \neq \mathop{\arg\max}\limits_{a} Q(s, a), & ~\text{probability}~~ \frac{\epsilon}{|A|} \\
+        &\mathop{\arg\max}\limits_{a} Q(s, a), & ~\text{probability}~~ & \textcolor{blue}{1 - \epsilon} + \frac{\epsilon}{|A|} &\\
+        &a' \neq \mathop{\arg\max}\limits_{a} Q(s, a), & ~\text{probability}~~ & \frac{\epsilon}{|A|} &\\
     \end{aligned}
-    \right.
+    \right.$
 \item $\epsilon$-greedy policy guarantees monotonic improvement, and can estimate $Q(s, a) \forall s, a$.
 \end{itemize}
 
@@ -679,7 +679,7 @@ Recall that TDL uses \textcolor{blue}{bootstrapping and sampling} to approximate
 where the temporal target $\textcolor{orange}{r + \gamma V^{\pi}(s')}$ is \textbf{biased} against $V^{\pi}(s)$.
 \begin{itemize}
 \item When with a look table, represent each state value with a separate table entry.
-\item in VFA, target is $\textcolor{orange}{r + \gamma V^{\pi}(s' \textbf{; \mathbf{w}})}$, also \textbf{biased} against $V^{\pi}(s)$.
+\item in VFA, target is $\textcolor{orange}{r + \gamma V^{\pi}(s' ; \mathbf{w})}$, also \textbf{biased} against $V^{\pi}(s)$.
 \item Equivalent to supervised learning on $<(s_i, r_i), \textcolor{orange}{\gamma \hat{V}^{\pi} (s_{i+1}; \mathbf{w})}>$ and finding weights $\mathbf{w}$ to minimize MSE with SGD:
 \begin{equation*}
     J(\mathbf{w}) = \mathbb{E}_{\pi}[ \left( \textcolor{orange}{r_j + \gamma V^{\pi} (s_{j+1}, \mathbf{w})} - \hat{V}(s_j; \mathbf{w}) \right)^2]
@@ -727,7 +727,62 @@ There are a few incremental approaches to determine the increment $\Delta \mathb
 \end{hintbox}
 
 \subsection{Deadly Triad and Remedies}
+Applying bootstrapping, Function Approximation and Off-policy Learning leads to oscillations and non-convergence!
+\begin{itemize}
+\item Reason: Bellman operators on updates are contractions, but \textcolor{blue}{VFA may be expansions}.
+\item Q-learning with VFA diverges with \textcolor{blue}{correlation between samples} and \textcolor{blue}{non-stationary targets}.
+\end{itemize}
+
+Solution presented includes \textbf{Deep Q-learning Network (DQN)}, featuring replay and fixed Q-targets.
+\begin{defbox}
+    \subsubsection*{Remedy 1: DQN with Replay}
+    Extract \textcolor{blue}{sample experience tuples $(s_{i}, a, r, s_{i+1})$} $\sim D$ (a replay buffer from prior experience)
+    \begin{itemize}
+    \item Target value: $r + \gamma \mathop{\max}\limits_{a'} \hat{Q}(s', a'; \mathbf{w})$; plug into SGD
+    \item The replay buffer is usually of fixed size
+    \item SGD to update network weights: $\Delta \mathbf{w} = \alpha \left( r + \gamma \mathop{\max}\limits_{a'} \hat{Q}(s', a'; \mathbf{w}) - \hat{Q}(s, a; \mathbf{w})\right) \nabla_{\mathbf{w}} \hat{Q}(s, a; \mathbf{w})$
+    \end{itemize}
+\end{defbox}
+
+\begin{defbox}
+    \subsubsection*{Remedy 2: Fix Target Weights}
+    Fix the target weights used in the target calculation for multiple updates
+    \begin{itemize}
+    \item Different set of target network weights ($\mathbf{w}^{-}$) than the weights being updated ($\mathbf{w}$)
+    \item Fix $\mathbf{w}^{-}$ for multiple updates before replacing it with new $\mathbf{w}$ for next multiple steps
+    \item Target value: $r + \gamma \mathop{\max}\limits_{a'} \hat{Q}(s', a'; \textcolor{red}{\mathbf{w}^{-}})$
+    \end{itemize}
+\end{defbox}
+
+\subsection{DQN in Practice with Atari}
+Below discusses an example in practice:
+
+\begin{expbox}
+    \subsubsection*{Workflow of applying DQN in Atari}
+    \begin{itemize}
+    \item Learn $Q(s, a)$ from pixel $s$;
+    \item Input state $s$ = raw pixels from last 4 frames
+    \item Output: $Q(s, a)$ for all (joystick, button)
+    \item Reward: $\Delta$ Score
+    \item Architecture: Deep NN with CNN 
+    \end{itemize}
+    \textbf{Outcome}: DQN mostly outperforms best linear learners!
+\end{expbox}
+
 \begin{hintbox}
-    "Bellman operators are contractions, but value function approximation fitting can be an expansion". What does this mean?
+    \subsubsection*{Caveats of Atari DQN}
+    \begin{itemize}
+    \item Deep network \textit{without} fixed Q in fact \textcolor{magenta}{hurts performance!} (worse than linear)
+    \item Replays are hugely important!
+    \item Immediate improvements: 
+        \href{https://arxiv.org/abs/1509.06461}{Double DQN (Van Hasselt, 2016)},
+        \href{https://arxiv.org/pdf/1511.05952}{Prioritized Replay (Schaul et. al., 2016)},
+        \href{https://arxiv.org/abs/1511.06581}{Dueling DQN (Wang et. al., 2016)}
+    \end{itemize}
+\end{hintbox}
+
+\begin{hintbox}
+    Q: "Bellman operators are contractions, but value function approximation fitting can be an expansion". What does this mean?
+    Q: How are replays hugely important beyond decorrelating between samples?
 \end{hintbox}
 \end{document}

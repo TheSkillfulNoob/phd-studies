@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.3) (preloaded format=pdflatex 2025.3.15)  25 APR 2025 03:27
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.3) (preloaded format=pdflatex 2025.3.15)  10 MAY 2025 09:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1168,10 +1168,12 @@ Package gensymb Info: Using \textmu for \micro on input line 5.
 Package pgfplots notification 'compat/show suggested version=true': document has been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
 
 Package hyperref Info: Link coloring OFF on input line 5.
+(lectures 5-7.out) (lectures 5-7.out)
 \@outlinefile=\write5
 \openout5 = `"lectures 5-7.out"'.
 
 \c@lstlisting=\count428
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -1242,12 +1244,7 @@ Overfull \hbox (39.96483pt too wide) in paragraph at lines 256--262
 [7]
 
 [8]
-c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures 5-7.tex:524: Limit controls must follow a math operator.
-l.524 ...eta_{k+1} = \mathop{\arg\max} ~~~ \limits
-                                                  _{\theta} L_{\theta_{k}}^{...
-I'm ignoring this misplaced \limits or \nolimits command.
-
-<lec6-clipped-values.png, id=137, 325.215pt x 127.07475pt>
+<lec6-clipped-values.png, id=234, 325.215pt x 127.07475pt>
 File: lec6-clipped-values.png Graphic file (type png)
 <use lec6-clipped-values.png>
 Package pdftex.def Info: lec6-clipped-values.png  used on input line 536.
@@ -1255,38 +1252,40 @@ Package pdftex.def Info: lec6-clipped-values.png  used on input line 536.
 
 
 [9 <./lec6-clipped-values.png>]
+
+[10]
+
+[11]
+
+[12]
 \tf@thm=\write6
 \openout6 = `"lectures 5-7.thm"'.
 
 
 
-[10] (lectures 5-7.aux)
+[13]
+runsystem(latexminted cleantemp  --timestamp 20250510094838 96F4D330E518275BF74F5CB6A711CFC6)...disabled (restricted).
+
+ (lectures 5-7.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-
-
-Package rerunfilecheck Warning: File `"lectures 5-7".out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `"lectures 5-7".out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  426EBE67665D60A712A34BE359973FFE;3657.
+Package rerunfilecheck Info: File `"lectures 5-7".out' has not changed.
+(rerunfilecheck)             Checksum: 3212F8363CDFE944E9C026EEA15BF6BE;5475.
  ) 
 Here is how much of TeX's memory you used:
- 47495 strings out of 473523
- 1124024 string characters out of 5714630
- 1777614 words of memory out of 5000000
- 69908 multiletter control sequences out of 15000+600000
+ 47564 strings out of 473523
+ 1125208 string characters out of 5714630
+ 1777641 words of memory out of 5000000
+ 69951 multiletter control sequences out of 15000+600000
  566281 words of font info for 63 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  113i,16n,110p,945b,1249s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\85290\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on "lectures 5-7.pdf" (10 pages, 248912 bytes).
+ <C:\Users\85290\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on "lectures 5-7.pdf" (13 pages, 291610 bytes).
 PDF statistics:
- 228 PDF objects out of 1000 (max. 8388607)
- 63 named destinations out of 1000 (max. 500000)
- 162 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 358 PDF objects out of 1000 (max. 8388607)
+ 85 named destinations out of 1000 (max. 500000)
+ 394 words of extra memory for PDF output out of 10000 (max. 10000000)
 

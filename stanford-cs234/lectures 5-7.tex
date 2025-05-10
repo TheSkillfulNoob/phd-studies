@@ -521,7 +521,7 @@ An alternative approach is clipping: restrict via \textcolor{blue}{pessimistical
             = \mathbb{E}_{\tau \sim \pi_{k}} \left[ \sum_{t = 0}^{T} \left[ \textcolor{magenta}{\min} \left( r_{t} (\theta) \hat{A}_t^{\pi_{k}}, \textcolor{blue}{\text{clip}(r_{t}(\theta), \textcolor{orange}{1 - \epsilon, 1 + \epsilon})} \hat{A}_t^{\pi_{k}} \right) \right] \right]
         \end{equation*}
         In other words, $r_{t} (\theta)$ is \textcolor{blue}{clipped between ($\textcolor{orange}{1 - \epsilon, 1 + \epsilon}$)}; hyperparameter $\epsilon$ usually set at 0.2.
-    \item Policy update: $\theta_{k+1} = \mathop{\arg\max} ~~~ \limits_{\theta} L_{\theta_{k}}^{\text{Clip}} (\theta)$
+    \item Policy update: $\theta_{k+1} = \mathop{\arg\max}\limits_{\theta} L_{\theta_{k}}^{\text{Clip}} (\theta)$
     \end{itemize}
 \end{thmbox}
 
@@ -567,6 +567,212 @@ PPO's performance consistently \textcolor{blue}{tops other algos, hence wildly p
         \end{itemize}
         In practice, \textcolor{magenta}{clipping} is much more common/ popular given \textcolor{magenta}{implementation and performance}.
     \end{prfbox}
+\end{hintbox}
+
+\subsection{Generalized Advantage Estimator (GAE)}
+\begin{itemize}
+\item Idea: Exponentially weighted average of $k$-step estimators
+\item $\hat{A}_t^{GAE(\gamma, \lambda)} = (1 - \lambda)(\hat{A}_t^{(1)} + \lambda \hat{A}_t^{(2)} + \dots) 
+    = (1 - \lambda) \left[ \delta_{t}^{V} + \lambda(\delta_{t}^{V} + \gamma \delta_{t+1}^{V}) + \lambda^2(\delta_{t}^{V} + \gamma \delta_{t+1}^{V} + \gamma^2 \delta_{t+2}^{V}) \right]
+    = \sum_{i = 0}^{\infty} (\gamma \lambda)^{i} \delta_{t + i}^{V}
+    $ 
+\item PPO uses \textcolor{blue}{truncated GAE}:
+    \\$\hat{A}_t^{PPO} = \sum_{i = 0}^{T - t - 1} (\gamma \lambda)^{i} \delta_{t + i}^{V}$
+    \\Benefit: Only run policy for $T$ timesteps before updating - \textcolor{blue}{improve gradient estimation}!
+\end{itemize}
+
+\begin{thmbox}
+    \subsubsection*{Properties of GAE}
+    \begin{itemize}
+    \item GAE($\gamma, \lambda = 0$) is the advantage using TD(0): $\hat{A}_{t}^{(1)}$
+    \item Given the series representation, we use $\lambda \in (0, 1)$: doesn't make sense with $\lambda = 0$
+    \item \textcolor{orange}{Increasing $\lambda$} introduces \textcolor{orange}{more variance, less bias}. 
+        \\Larger bias on GAE($\gamma, \lambda = 0$) than GAE($\gamma, \lambda = 0.99$)
+    \end{itemize}
+\end{thmbox}
+
+\begin{hintbox}
+    Clarity: What is $\lambda$ here? Both a technical and intuitive explanation?
+\end{hintbox}
+
+\subsection{Monotonic Improvement Theory}
+Recall:
+\begin{itemize}
+\item Approximation reason: No data ($\tau \sim \pi'$; only have $\pi$)
+\item Why use $\pi \approx \pi'$: approximation quality is ensured by KL-divergence
+    \begin{equation*}
+        |J(\pi') - \left( J(\pi) + \mathbb{L}_{\pi}(\pi') \right)| \leq C \sqrt{\mathbb{E}_{s \sim d^{\pi}} \left[ D_{KL} (\pi' || \pi) [s] \right]}
+    \end{equation*}
+\item Rearranging, $J(\pi') - J(\pi) \geq \mathbb{L}_{\pi}(\pi') - C \sqrt{\mathbb{E}_{s \sim d^{\pi}} \left[ D_{KL} (\pi' || \pi) [s] \right]}$
+    \\Maximizing RHS w.r.t. $\pi'$ guarantees improving over $\pi$ (majorize-maximize)
+    \\RHS: $\mathbb{L}_{\pi}(\pi')$ and KL-term both estimatable from $\pi$ samples!
+\end{itemize}
+
+\begin{prfbox}
+    \subsubsection*{Proof Sketch of Monotonic Improvement}
+    \begin{itemize}
+    \item Set $\pi_{k+1} = \mathop{\arg\max}\limits_{\pi'} \mathbb{L}_{\pi_k} (\pi') - C \sqrt{\mathbb{E}_{s \sim d^{\pi_k}} \left[ D_{KL} (\pi' || \pi_k) [s] \right]}$
+    \item $\pi_k$ feasible with $J(\pi_{k+1}) - J(\pi_{k}) = 0$ because:
+        \\(i) $\mathbb{L}_{\pi_k} (\pi_k) \propto \mathbb{E} \left[ A^{\pi_{k}} (s, a)\right] = 0$
+        \\(ii) $D_{KL} (\pi_k || \pi_k) [s] = 0$
+    \item This guarantees optimal value $\geq 0$: will improve by perf bounds!
+    \end{itemize}
+\end{prfbox}
+
+\subsection{Further Improvements}
+\begin{thmbox}
+    \subsubsection*{Performance Bounds: Practical Improvements}
+    \begin{itemize}
+    \item Problems: Theoretical $C$ is too high when $\gamma \to 1$, leading to small steps
+    \item Solution: Tune KL (PPO); Use KL constraint (Trust region)
+    \end{itemize}
+\end{thmbox}
+
+\begin{warnbox}
+    Despite the practical performance improvement, \textcolor{red}{no longer guarantee} monotonic improvements!
+\end{warnbox}
+
+\begin{defbox}
+    \subsubsection*{Summary: PPO}
+    \begin{itemize}
+    \item Method: Clipping/ KL constraint to increase monotonic improvement likelihood
+    \item Rationale: Take several gradient steps before gathering more data (improves eff.)
+    \item Result: Converges to \textcolor{blue}{local optima}
+    \item Popularity: easy to implement ($\Rightarrow$ ChatGPT tuning) 
+    \end{itemize}
+
+    \subsubsection*{Summary: Policy Gradient}
+    \begin{itemize}
+    \item Advantage: Usable in non-differentiable reward $\to$ Hence more popular and useful 
+    \item Used in conjunction with \textcolor{blue}{model-free value methods}, e.g. actor critics
+    \end{itemize}
+\end{defbox}
+
+\section{Imitation Learning}
+IL is motivated by automating \textcolor{blue}{existent, very good decision policies} for simple, cheap supervision:
+\begin{itemize}
+\item Human provides reward signals, RL algos make decisions.
+\item Strength: When easier for expert demonstration of "desired behaviour" than specifying reward that generates such.
+\end{itemize}
+IL feeds from the following inputs:
+
+\begin{defbox}
+    \subsubsection*{IL Inputs}
+    \textcolor{blue}{(1) Reward Shaping}
+    \begin{itemize}
+    \item Requires time-dense rewards to guide agents. This occurs in two ways:
+        \\Manual: brittle design; Implicit: through demonstrations
+    \item Demonstrations are from \textcolor{blue}{experts} providing sequences of $\{s, a\}$ (demo trajectories).
+    \end{itemize}
+
+    \textcolor{blue}{(2) Inputs}
+    \begin{itemize}
+    \item State $s$, Actions $a$, Transition $P(s' | s, a)$, demo. set $(s_0, a_0, s_1, a_1, \dots)$ from expert policy $\pi^{*}$
+    \item No reward function $R$ 
+    \end{itemize}
+\end{defbox}
+
+\subsection{Behavourial Cloning}
+The aim here: reduce expert policy learning to \textcolor{blue}{supervised learning}.
+\begin{itemize}
+\item Method: (1) Fix policy class (NN/ Trees) and (2) Estimate from training examples
+\item Practical use: Bidirectional Convolutional Recurrent NN (BCRNN)
+\item Problem: \textcolor{red}{Compounding Errors} - SL assumes i.i.d. ($s, a$) pairs and time errors: this ignores the temporal structure!
+    \\In other words: Data distribution mismatch (e.g. racing track case - no data on how to recover)
+\item Approx Intuition: Instead of uncorrelated errors ($\mathbb{E}$[Errors] $\propto T$), should be $\propto T^2$!
+\end{itemize}
+
+A remedy to solve the above is \textbf{DAGGER (Dataset Aggregation)}:
+\begin{itemize}
+\item Idea: More labels of expert action along paths taken by policy computed
+\item Output: Stationary deterministic policy under \textcolor{blue}{induced state distribution} 
+\end{itemize}
+
+\begin{hintbox}
+    Q: What does it mean to have "no $R$" in inputs of IL?
+    Q: Key limitations of DAGGER?
+\end{hintbox}
+
+
+\subsection{Inverse RL and Reward R}
+\begin{itemize}
+\item Even under expert's optimal policy, there are \textcolor{blue}{infinitely many possible R} values! 
+\item With linear features, use linear VFA: $R(s) = \mathbf{w}^{T} x(s)$ where $\mathbf{w} \in \mathbb{R}^{n}$ is to be identified from demo.
+\item Express the value 
+    $V^{\pi}(s_0) = \mathbb{E}_{s \sim \pi} \left[ \sum_{t = 0}^{\infty} \gamma^{t} R(s_t) | s_0 \right]
+    = \mathbb{E}_{s \sim \pi} \left[ \sum_{t = 0}^{\infty} \gamma^{t} x(s_t) | s_0 \right]
+    = \mathbf{w}^{T} \mathbb{E}_{s \sim \pi} \left[ \sum_{t = 0}^{\infty} \gamma^{t} x(s_t) | s_0 \right]
+    = \mathbf{w}^{T} \textcolor{red}{\mu(\pi, s_0)}$
+    \\Here $\textcolor{red}{\mu(\pi, s_0)}$ is the discounted weighted frequency of state features under policy $\pi$ from state $s_0$.
+\end{itemize}
+
+In fact, if expert demos are from optimal policy $\pi^{*}$, sufficient to match discounted summed feature expectations to expert's policy (feature matching):
+\begin{itemize}
+\item Objective: $V^{*} \geq V^{\pi}$. Happens if $(w^{*})^{T} \mu(\pi^{*}) \geq (w^{*})^{T} \mu(\pi) \forall \pi \neq \pi^{*}$
+\item Feature matching: $||\mu(\pi) - \mu(\pi^{*})||_{1} \leq \epsilon \leftrightarrow \forall \mathbf{w}: ||\mathbf{w}||_{\infty} \leq 1, |\mathbf{w}^{T} \mu(\pi) - \mathbf{w}^{T} \mu(\pi^{*})| \leq \epsilon$ 
+\item Issue: Which stochastic policy (infinite to match feature counts) or reward functions (infinite for same optimal policy) to choose?
+\item Suggestions: Max. Entropy inverse RL, generative adversarial IL
+\end{itemize}
+
+\subsection{Principle of Max Entropy}
+Denote linear reward $R(s) = \mathbf{w}^{T} x(s)$, 
+total feature count on single trajectory $\tau_{j}$: $\mu_{\tau_{j}} = \sum_{s_i \in \tau_{j}} x(s_i)$;
+average feature count $\tilde{\mu} = \frac{1}{m} \sum_{j = 1}^{m} \mu_{\tau_{j}}$.
+
+\subsubsection{Deterministic MDP}
+\begin{itemize}
+\item Under linear reward model, a deterministic MDP's distribution of trajectory completely specifies policy!
+    \\Principle: Choose $\mathbf{w}$ to select max entropy constrained to matching feature expectations.
+    \begin{enumerate}
+    \item Constraint: $\sum_{\tau} P(\tau) = 1$, $P(\tau) \mu_{\tau} = \tilde{\tau}$
+    \item Objective: $\mathop{\max}\limits_{P} \left( \sum_{\tau} P(\tau) \log P(\tau) \right)$
+    \end{enumerate}
+\end{itemize}
+
+The principle implies to \textcolor{blue}{maximize likelihood of observed data} under max entropy (i.e. exponential) distribution:
+\begin{equation*}
+    P(\tau_{j} | \mathbf{w}^{T}) = \frac{1}{Z(\mathbf{w}^{T})} \exp \left( \sum_{s_i \in \tau_{j}} \mathbf{w}^{T} x(s_i) \right), 
+    \quad Z(\mathbf{w}^{T}, s) = \sum_{\tau_{s}} \exp \left( \mathbf{w}^{T} \mu_{\tau_{s}} \right)
+\end{equation*}
+In other words, strongly prefer \textcolor{blue}{low-cost paths}!
+
+\subsubsection{Stochastic MDP}
+For stochastic MDPs, the distribution over paths depends both on the \textcolor{blue}{reward weights} and \textcolor{blue}{stochastic dynamics}:
+\begin{equation*}
+    P(\tau_{j} | \textcolor{cyan}{\mathbf{w}}, \textcolor{orange}{P(s' | s, a)} ) \approx \frac{e^{\mathbf{w}^{T} \mu_{\tau_{j}}}}{Z(\mathbf{w}^{T}, P(s' | s, a))} \prod_{s_{i}, a_{i} \in \tau_{j}} P(s_{i+1} | s_{i}, a_{i})
+\end{equation*}
+
+\subsubsection{Then, how to learn the weight?}
+
+\begin{thmbox}
+    \subsubsection*{Learning the Weights via GD to Maximize Likelihood}
+    Learn $\mathbf{w}$ to maximize data likelihood:
+    \begin{equation*}
+        \mathbf{w}^{*} 
+        = \mathop{\arg \max}\limits_{\mathbf{w}} L(\mathbf{w})
+        = \mathop{\arg \max}\limits_{\mathbf{w}} \sum_{\text{examples}} \log P(\tau | \mathbf{w})
+    \end{equation*}
+
+    Apply GD again, where
+    \begin{equation*}
+        \nabla L(\mathbf{w}) 
+        = \tilde{\mu} - \textcolor{cyan}{\sum_{\tau} P(\tau | \mathbf{w}) \mu_{\tau}}
+        = \tilde{\mu} - \textcolor{orange}{\sum_{s_i} D(s_i) x(s_i)}
+    \end{equation*}
+    Here $\tilde{\mu}$ is the learner's expected empirical feature count, and 
+    the \textcolor{cyan}{expected empirical feature counts} can be expressed as \textcolor{orange}{expected state visitation frequencies}.
+\end{thmbox}
+
+Why does max entropy IRL work well here?
+\begin{itemize}
+\item \textcolor{blue}{Principled way} for selecting among many possible reward function $R$s. 
+\item No longer need to know \textcolor{blue}{transition model $P$}!
+\item Convenient to \textcolor{blue}{proceed (from this learned $R$) to use regular RL} (ongoing research interest).
+\end{itemize}
+
+\begin{hintbox}
+    Q: Why approx, not equals, in the stochastic MDP? Are there any other reasons than the path dependence $\tau$?
+    Q: Does behavourial cloning require knowing $P$?
 \end{hintbox}
 
 \end{document}

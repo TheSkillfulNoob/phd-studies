@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1744647481.20045 "c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures.tex" "lectures.pdf" "lectures" 1744647484.05607 2
-  "C:/Users/85290/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1744553771 94280 1ee488709fa9075226b89119a9fb83bb ""
+["pdflatex"] 1746787892.54759 "c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures.tex" "lectures.pdf" "lectures" 1746787894.81425 0
+  "C:/Users/85290/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1746317925 94280 1ee488709fa9075226b89119a9fb83bb ""
   "C:/Users/85290/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1000.pk" 1742006369 11548 d607b6dc6085bdb24b416fdb98591772 ""
   "C:/Users/85290/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1742005694 12036089 3a187c18c6ba24e9f0e4023bfc82a8ef ""
   "C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/tfm/jknappen/ec/ectt1000.tfm" 993062340 1348 d70ddf2d5d512b838e50a335e385e919 ""
@@ -291,10 +291,10 @@
   "C:/Users/85290/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/85290/AppData/Local/Programs/MiKTeX/tex/latex/wrapfig/wrapfig.sty" 1044403200 26220 3701aebf80ccdef248c0c20dd062fea9 ""
   "C:/Users/85290/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
-  "c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures.tex" 1741090131 36216 64c724047c1e995adeed58034e58b24c ""
-  "lectures.aux" 1744647483 3811 ee6dc47339016724d8a55f47aa5becc2 "pdflatex"
-  "lectures.out" 1744647483 5128 455684e18f63e56d6268456b4593bc9d "pdflatex"
-  "lectures.tex" 1741090131 36216 64c724047c1e995adeed58034e58b24c ""
+  "c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures.tex" 1746787891 39010 f188f470eb0d3daf6582fcc9e4acdd53 ""
+  "lectures.aux" 1746787894 3945 db0379a1f24c6976d93e44822147aa26 "pdflatex"
+  "lectures.out" 1746787894 5328 120294be75503635e59c11deea1155cf "pdflatex"
+  "lectures.tex" 1746787891 39010 f188f470eb0d3daf6582fcc9e4acdd53 ""
   "preamble-eng.tex" 1739221207 5788 a0d3aefa9aee43e5ba3aada34a90f25a ""
   (generated)
   "lectures.aux"

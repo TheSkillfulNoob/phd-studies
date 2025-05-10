@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.3) (preloaded format=pdflatex 2025.3.15)  15 APR 2025 00:18
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.3) (preloaded format=pdflatex 2025.3.15)  9 MAY 2025 18:51
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1042,8 +1042,7 @@ Package: parskip 2021-03-14 v2.0h non-zero parskip adjustments
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count421
 \l__pdf_internal_box=\box109
-)
-No file lectures.aux.
+) (lectures.aux)
 \openout1 = `lectures.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 5.
@@ -1128,7 +1127,7 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 5.
 LaTeX Font Info:    ... okay on input line 5.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 5.
 LaTeX Font Info:    ... okay on input line 5.
-(C:\Users\85290\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
+ (C:\Users\85290\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count422
 \scratchdimen=\dimen372
@@ -1169,10 +1168,12 @@ Package gensymb Info: Using \textmu for \micro on input line 5.
 Package pgfplots notification 'compat/show suggested version=true': document has been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
 
 Package hyperref Info: Link coloring OFF on input line 5.
+(lectures.out) (lectures.out)
 \@outlinefile=\write5
 \openout5 = `lectures.out'.
 
 \c@lstlisting=\count428
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -1235,48 +1236,7 @@ LaTeX Warning: Command \textellipsis invalid in math mode on input line 170.
 
 [3]
 
-c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures.tex:240: LaTeX Error: Unicode character π (U+03C0)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.240         $V_k^{π
-                      }(s) = \textcolor{orange}{\sum_{a} \pi(a | s)} \textco...
-You may provide a definition with
-\DeclareUnicodeCharacter 
-
-
-c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures.tex:250: LaTeX Error: Unicode character π (U+03C0)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.250         $V_k^{π
-                      }(s) = r (s | \pi(s)) + \gamma \sum_{s' \in S} P(s' | ...
-You may provide a definition with
-\DeclareUnicodeCharacter 
-
-
-
 [4]
-
-c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures.tex:302: LaTeX Error: There's no line here to end.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.302       \\i
-               s a deterministic quantity.
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-
 
 [5]
 
@@ -1292,38 +1252,6 @@ Overfull \hbox (23.55937pt too wide) in paragraph at lines 417--434
 
 
 [7]
-
-c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures.tex:490: Package amsmath Error: \begin{aligned} allowed only in math mode.
-
-See the amsmath package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.490                     V
-                           ^{\pi}(s)' & = \frac{G(s)'}{N(s)'} = \frac{G(s) +...
-You're in trouble here.  Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures.tex:490: Missing $ inserted.
-<inserted text> 
-                $
-l.490                     V
-                           ^{\pi}(s)' & = \frac{G(s)'}{N(s)'} = \frac{G(s) +...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures.tex:494: Missing $ inserted.
-<inserted text> 
-                $
-l.494                 \end{aligned}
-                                   
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-
 Overfull \hbox (191.58432pt too wide) in paragraph at lines 501--515
  [] 
  []
@@ -1331,42 +1259,8 @@ Overfull \hbox (191.58432pt too wide) in paragraph at lines 501--515
 
 
 [8]
-c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures.tex:580: Missing $ inserted.
-<inserted text> 
-                $
-l.580     \left
-               \{
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-
-c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures.tex:586: LaTeX Error: Command \item invalid in math mode.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.586 \item
-            $\epsilon$-greedy policy guarantees monotonic improvement, and c...
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures.tex:586: Missing $ inserted.
-<inserted text> 
-                $
-l.586 \item $
-             \epsilon$-greedy policy guarantees monotonic improvement, and c...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-
-Overfull \hbox (82.98692pt too wide) in paragraph at lines 578--586
-[]$\OML/cmm/m/it/10 ^^O$\OT1/cmr/m/n/10 -greedy path-ways se-lects argmax ac-tion with []$1 \OMS/cmsy/m/n/10 ^^@ \OML/cmm/m/it/10 ^^O$ \OT1/cmr/m/n/10 prob-a-bil-ity[], else ran-dom. i.e. $\OML/cmm/m/it/10 ^^Y\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 a\OMS/cmsy/m/n/10 j\OML/cmm/m/it/10 s\OT1/cmr/m/n/10 ) =$ $[]
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 578--586
-
+Overfull \hbox (90.76471pt too wide) in paragraph at lines 578--586
+[]$\OML/cmm/m/it/10 ^^O$\OT1/cmr/m/n/10 -greedy path-ways se-lects argmax ac-tion with []$1 \OMS/cmsy/m/n/10 ^^@ \OML/cmm/m/it/10 ^^O$ \OT1/cmr/m/n/10 prob-a-bil-ity[], else ran-dom. i.e. $\OML/cmm/m/it/10 ^^Y\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 a\OMS/cmsy/m/n/10 j\OML/cmm/m/it/10 s\OT1/cmr/m/n/10 ) =$$[]$ 
  []
 
 
@@ -1379,52 +1273,37 @@ Package hyperref Warning: Difference (2) between bookmark levels is greater
 
 [10]
 
-c:/Users/85290/Documents/GitHub/ml-learning-spring2025/stanford-cs234/lectures.tex:682: LaTeX Error: \mathbf allowed only in math mode.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.682 ...\gamma V^{\pi}(s' \textbf{; \mathbf{w}})}
-                                                  $, also \textbf{biased} ag...
-You're in trouble here.  Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-
 [11]
+
+[12]
 \tf@thm=\write6
 \openout6 = `lectures.thm'.
 
 
 
-[12] (lectures.aux)
+[13]
+runsystem(latexminted cleantemp  --timestamp 20250509185132 EED5EFD21EAF331E13776682C7022D09)...disabled (restricted).
+
+ (lectures.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-
-
-Package rerunfilecheck Warning: File `lectures.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `lectures.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  455684E18F63E56D6268456B4593BC9D;5128.
+Package rerunfilecheck Info: File `lectures.out' has not changed.
+(rerunfilecheck)             Checksum: 120294BE75503635E59C11DEEA1155CF;5328.
  ) 
 Here is how much of TeX's memory you used:
- 47544 strings out of 473523
- 1124259 string characters out of 5714630
- 1776604 words of memory out of 5000000
- 69918 multiletter control sequences out of 15000+600000
+ 47589 strings out of 473523
+ 1125199 string characters out of 5714630
+ 1776623 words of memory out of 5000000
+ 69951 multiletter control sequences out of 15000+600000
  566449 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  113i,15n,110p,939b,1250s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\85290\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/85290/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on lectures.pdf (12 pages, 271155 bytes).
+Output written on lectures.pdf (13 pages, 286632 bytes).
 PDF statistics:
- 292 PDF objects out of 1000 (max. 8388607)
- 103 named destinations out of 1000 (max. 500000)
- 157 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 390 PDF objects out of 1000 (max. 8388607)
+ 109 named destinations out of 1000 (max. 500000)
+ 373 words of extra memory for PDF output out of 10000 (max. 10000000)
 
