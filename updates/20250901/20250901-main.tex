@@ -1,0 +1,128 @@
+\documentclass[xcolor=dvipsnames]{beamer}
+\input{../custom_preamble}
+\geometry{papersize={14cm,10.5cm}}
+\ThemeVariationOne
+
+\begin{document}
+\customtitle
+{Starting Things Off!}
+{1 Sept, 2025}
+
+\begin{frame}{Motivation of Updating This Way}
+    \begin{itemize}
+    \item \textcolor{blue}{Systematic organization of information}, knowledge, paper-reading and writing ideas for the upcoming years 
+    \item Keep progress/ moves visible by \textcolor{blue}{discretizing at reasonable steps}
+    \item \textcolor{blue}{Make related communication smoother}/ predictable by keeping people around updated
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{One Slide Introduction: Myself}
+    \begin{itemize}
+    \item \textbf{Name}: Andrew LAM (\begin{CJK*}{UTF8}{bsmi}林碩風\end{CJK*})
+    \item \textbf{Undergrad major}: HKUST QFIN + MATH (2020-24)
+    \item \textbf{Motivation of picking IEDA}: 
+        "Quantifying the World" with research, 
+        after quantifying in finance under a quant trading internship
+    \item \textbf{Hobbies}:
+        Cycling, Tetris (original proposed topic), Arcade, Weekly Reflections
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{What Have I Done: Jun-Aug}
+    I focused on three main arcs, to properly \textcolor{blue}{recharge and explore myself} before the
+    research seasons kick in:
+    \begin{enumerate}
+    \item \textbf{NLP Applications}
+        \begin{itemize}
+        \item Inspired by my \textcolor{blue}{Buffett Letters' Parts of Speech} project (June 2025)
+        \item Developing project for \textcolor{blue}{analyzing dating markets'} posting sentiments 
+        \end{itemize}
+    \item \textbf{Math Education}
+        \begin{itemize}
+        \item Constructed a \textcolor{blue}{repository supporting by-topic classifications} of 
+            various high school level math exams (HKDSE/ HKALE/ Camb STEP...) and automatic document 
+            generation under Python infrastructure ($\sim$6K Questions, Jul-Aug 2025)
+        \item Will spend a minor chunk of time in AY2025-26 on \textcolor{blue}{supervising pro-bono math mock} events 
+            for HKDSE students, after gathering a team of volunteers
+        \end{itemize}
+    \item \textbf{Personal: Arcade and Fitness}
+        \begin{itemize}
+        \item Developed \textcolor{blue}{Bowling hobby} and maintained weekly sessions (Jun-Aug)
+        \item Spent 100+ hours on \textcolor{blue}{rhythm game} \textit{Maimai} to train musical timing, hand 
+            muscles and explore songs of different genres. 
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Regarding Research - Reading}
+    Prof. Zhang assigned 
+    \textcolor{cyan}{\href{https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4262186}{this research project's extension}} to me in June:
+    \begin{itemize}
+    \item \textbf{Context}: Multi-echelon inventory management (MEIM)
+    \item \textbf{Paper Insights}: applies Multi-Agent Deep Reinforcement Learning (MADRL), 
+        specifically Heterogeneous-Agent Proximal Policy Optimization (HAPPO),
+        by modelling the system as a Partially Observable Markov Game (POMG)
+    \item \textbf{Results}: Agents trained via HAPPO surpass single-agent RL and heuristic baselines, 
+        achieving lower total costs and mitigating the bullwhip effect through upfront-only information sharing
+    \end{itemize}
+
+    \begin{defbox}
+        \textbf{Question from Prof:}
+        \\What if each agent is only interested in maximizing its own benefit without concerning the system’s benefit:
+        Would cooperation still arise?
+    \end{defbox}
+\end{frame}
+
+\begin{frame}{Regarding Research - Rough Plan I}
+    A rough sketch of my follow-ups in the next few weeks:
+    \begin{itemize}
+    \item \textcolor{blue}{Do reading on MEIM's background, common complexities} 
+        (lead times, demand uncertainty, and inter-echelon coordination),
+        and \textcolor{blue}{existing models} such as 
+        \begin{enumerate}
+        \item Traditional inventory Base Stock and (s, S); 
+        \item Dual-Sourcing;
+        \item employing heterogeneous agents to address decentralized decision-making)
+        \end{enumerate}
+    \item \textcolor{blue}{Sensitivity and Initialization} of inventory problems (Initial inventories/backlogs, stochastic demand, 
+        sensitivity analysis on lead times and costs)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Regarding Research - Rough Plan II}
+    \small
+    Summarize \textcolor{blue}{Problem Variations and Literature insights}, on:
+    \begin{enumerate}
+    \item \textcolor{blue}{Bullwhip Effect} (Demand variability increases from downstream to upstream due to information distortion)
+    \item \textcolor{blue}{Supply Uncertainty}: Price fluctuations, lead-time variability, shipping losses
+    \item \textcolor{blue}{Information-Sharing Scenarios}: Fully centralized, decentralized, and hybrid (like CTDE)
+    \end{enumerate}
+    Plan to read several other relevant papers (e.g. Lee et al. (1997) on bullwhip effect/ 
+    Clark and Scarf (1960) and Shang and Song (2003) for base-stock policy optimality and heuristics)   
+
+    \vspace{1em}
+    After going through the above, I will work on the article's HAPPO Implementation via Python:
+    \begin{itemize}
+    \item Set up actors' \textcolor{blue}{observation spaces} with inventories, backlogs, and order flows.
+    \item \textcolor{blue}{Define neural network models} (e.g., using PyTorch with GRU units).
+    \item Custom \textcolor{blue}{simulation environments} for episodic training.
+    \item \textcolor{blue}{Implement PPO} via stable-baselines or custom methods.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Upcoming Academic Year: Plans}
+    To balance learning (input) and research (output), I intend to take 12 credits:
+    \begin{itemize}
+    \item \textbf{Required}: ENGG 6780, PDEV 6770B, IEDA 6800C
+    \item \textbf{Dept}: IEDA 5270 (Engg Statistic \& Data Analytic)
+    \item \textbf{Relevant to research}: MATH 5411 (Adv Probability Theory I)
+    \item \textbf{Language}: LANG 5005 (Communicating Research in English)
+    \item \textbf{For Interest}: COMP 5711 (Introduction to Advanced Algorithmic Techniques)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Any Questions/ Advice?}
+    Not gonna make this sounding too formal :P
+\end{frame}
+
+\end{document}

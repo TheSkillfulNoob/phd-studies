@@ -1,0 +1,164 @@
+\usepackage{
+    amsmath, % mathematical eq and symbols
+    graphicx, % manipulate graphics (images)
+    xcolor, % color options
+    colortbl, % colours to tables
+    soul, % highlighting
+    multirow, % merging cells in tables
+    bm, % bolding variables
+    arydshln, % dashed lines
+    subcaption, % 2 figures on the same row
+    textcomp, gensymb, % degree symbol
+    amsfonts, % real number bold
+    booktabs, % formal tables
+    scrextend, % block Indents
+    blkarray, % transitionary probability matrices
+    tikz, pgfplots, % coordinate/ fig plots
+    ifthen, % logic statements
+    CJKutf8, % Chinese characters
+    hyperref,
+    wrapfig, % For positioning figures
+    changepage,
+    etoolbox % To adjust minted inside Beamer
+}
+
+\geometry{paperwidth=11.5cm,paperheight=11.5cm}
+
+\newcommand\highlight[2][]{\tikz[overlay]\node[fill=cyan,inner sep=2pt, anchor=text, rectangle, rounded corners=1mm,#1] {#2};\phantom{#2}}
+
+\renewcommand\label[1]{}
+\pgfplotsset{compat = 1.18}
+\usetikzlibrary{matrix}
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=blue!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+% Colors
+\definecolor{customtableheaderblue}{HTML}{AAAAEE}
+\definecolor{customblue}{RGB}{224, 255, 255}
+\definecolor{custompink}{RGB}{255, 204, 229}
+\definecolor{customgreen}{RGB}{224, 255, 239}
+\definecolor{custompurple}{RGB}{239, 224, 255}
+
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+
+\usepackage[most]{tcolorbox}
+\usepackage{minted}
+\BeforeBeginEnvironment{minted}{\vspace{0em}} % Adjust spacing before and after minted
+\AfterEndEnvironment{minted}{\vspace{-1em}}
+
+\usetikzlibrary{shapes.geometric, arrows}
+\tcbuselibrary{theorems}
+
+\newtcolorbox[auto counter]{explanation}[1][]{
+title={\bfseries Explanation},
+enhanced,
+drop shadow={black!50!white},
+boxed title style = {
+top = 0.1in,
+bottom = 0.1in,
+size = small,
+colback = custompink,
+},
+coltitle=black,
+attach boxed title to top left = {
+xshift=-\tcboxedtitlewidth/8,
+yshift=-\tcboxedtitleheight/2
+},
+top = 0.15in,
+colback = customgreen,
+#1}
+
+\newtcolorbox[auto counter]{summary}[1][]{
+title={\bfseries Summary},
+enhanced,
+drop shadow={black!50!white},
+boxed title style = {
+top = 0.1in,
+bottom = 0.1in,
+size = small,
+colback = custompink,
+},
+coltitle=black,
+attach boxed title to top left = {
+xshift=-\tcboxedtitlewidth/6,
+yshift=-\tcboxedtitleheight/2
+},
+top = 0.15in,
+colback = customblue,
+#1}
+
+\newtcolorbox[auto counter, number within=subsection]{question}[1][]{
+title={\bfseries Question},
+enhanced,
+drop shadow={black!50!white},
+boxed title style = {
+top = 0.1in,
+bottom = 0.1in,
+size = small,
+colback = custompink,
+},
+coltitle=black,
+attach boxed title to top left = {
+xshift=-\tcboxedtitlewidth/10,
+yshift=-\tcboxedtitleheight/2
+},
+top = 0.15in,
+colback = custompurple,
+#1}
+
+\usetheme{Frankfurt}
+\newcommand{\ThemeVariationOne}{%
+  \usecolortheme[named=MidnightBlue]{structure}
+}
+
+\newcommand{\ThemeVariationTwo}{%
+  \usecolortheme{crane}
+  \setbeamercolor{section in head/foot}{fg=white, bg=violet}
+  \setbeamercolor{item projected}{fg=white, bg=purple}
+}
+
+\newcommand{\ThemeVariationThree}{%
+  \usecolortheme{crane}
+  \definecolor{mint}{HTML}{98FB98}
+  \definecolor{amazon}{HTML}{387B54}
+  \definecolor{seafoam}{HTML}{80F9AD}
+  \definecolor{forest}{HTML}{0B6623}
+  \definecolor{pistachio}{HTML}{93C572}
+  \setbeamercolor{title}{fg=white, bg=pistachio}
+  \setbeamercolor{section in head/foot}{fg=white, bg=forest}
+  \setbeamercolor{frametitle}{fg=white, bg=pistachio}
+  \setbeamercolor{item projected}{fg=white, bg=forest}
+  \setbeamercolor{item}{fg=black}
+}
+
+\newcommand{\ThemeVariationFour}{%
+  \usecolortheme{wolverine}
+  \setbeamercolor{section in head/foot}{fg=black}
+  \setbeamercolor{background canvas}{bg=yellow!15}
+}
+
+\usepackage[usenames,dvipsnames]{color}
+\newtcolorbox{prfbox}{colback=gray!10,colframe=black!70,boxrule=0pt,arc=0pt,boxsep=2pt,left=2pt,right=2pt,leftrule=0pt}
+\newtcolorbox{thmbox}{colback=orange!25,colframe=orange!85,boxrule=0pt,arc=0pt,boxsep=2pt,left=2pt,right=2pt,leftrule=2.5pt}
+\newtcolorbox{defbox}{colback=blue!5,colframe=blue!70,boxrule=0pt,arc=0pt,boxsep=2pt,left=2pt,right=2pt,leftrule=2.5pt}
+\newtcolorbox{expbox}{colback=green!10,colframe=green!70,boxrule=0pt,arc=0pt,boxsep=2pt,left=2pt,right=2pt,leftrule=2.5pt}
+\newtcolorbox{warnbox}{colback=red!15,colframe=red!70,boxrule=0pt,arc=0pt,boxsep=2pt,left=2pt,right=2pt,leftrule=2.5pt}
+\newtcolorbox{hintbox}{colback=violet!10,colframe=violet!70,boxrule=0pt,arc=0pt,boxsep=2pt,left=2pt,right=2pt,leftrule=2.5pt}
+
+% Command to include the title
+\newcommand{\customtitle}[2]{
+    \title{#1}
+    \date{#2}
+    \begin{frame}
+        \titlepage
+        \tableofcontents
+    \end{frame}
+}
+
+\author{
+    Andrew LAM
+}
+
+\setlength{\parindent}{0pt}
+\renewcommand{\baselinestretch}{1.15}
